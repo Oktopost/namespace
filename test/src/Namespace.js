@@ -183,7 +183,7 @@ suite('Namespace', () => {
 			assert.equal(obj.a.b.c, self);
 		});
 		
-		test('Deep namespace does not modify existing,', () => {
+		test('Deep namespace does not modify existing', () => {
 			var obj = { a: { b: {} } };
 			var objA = obj.a;
 			var objB = obj.a.b;
@@ -194,6 +194,15 @@ suite('Namespace', () => {
 			
 			assert.equal(obj.a, objA);
 			assert.equal(obj.a.b, objB);
+		});
+		
+		test('Callback not passed, namespace created', () => {
+			var obj = { a: { b: {} } };
+			var n = new Namespace(obj);
+			
+			n.namespace('a.b.c');
+			
+			assert.isDefined(obj.a.b.c);
 		});
 	});
 });
