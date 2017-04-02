@@ -1,5 +1,5 @@
 {
-  "name": "oktopost-spacename",
+  "name": "oktopost-namespace",
   "version": "1.0.0",
   "description": "Namespace library for js",
   "main": "index.js",
