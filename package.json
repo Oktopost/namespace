@@ -10,11 +10,13 @@
     "type": "git",
     "url": "https://github.com/Oktopost/spacename.git"
   },
-  "authors": [{
-    "name": "Alexey Puchkov",
-    "email": "alexey@oktopost.com",
-    "url": "http://www.oktopost.com/"
-  }],
+  "authors": [
+    {
+      "name": "Alexey Puchkov",
+      "email": "alexey@oktopost.com",
+      "url": "http://www.oktopost.com/"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Oktopost/spacename/issues"
@@ -22,17 +24,10 @@
   "homepage": "https://github.com/Oktopost/spacename#readme",
   "devDependencies": {
     "chai": "^3.5.0",
-    "del": "^2.2.2",
     "gulp": "^3.9.1",
-    "gulp-add-src": "^0.2.0",
-    "gulp-clean": "^0.3.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-delete-lines": "0.0.7",
-    "gulp-minify": "0.0.14",
+    "gulp-rename": "^1.2.2",
     "gulp-string-replace": "^0.3.1",
     "gulp-wrap": "^0.13.0",
-    "merge-stream": "^1.0.1",
-    "mocha": "^3.2.0",
-    "browserify": "^13.3.0"
+    "mocha": "^3.2.0"
   }
 }

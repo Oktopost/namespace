@@ -7,8 +7,7 @@
   "homepage": "https://github.com/Oktopost/namespace",
   "ignore": [
     "*",
-    "!namespace.js",
-    "!namespace-min.js"
+    "!web/namespace.js"
   ],
   "authors": [
     "Alexey Puchkov <alexey@oktopost.com>"

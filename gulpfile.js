@@ -1,12 +1,10 @@
 'use strict';
 
 
-const gulp = require('gulp');
-const clean = require('gulp-clean');
-const minify = require('gulp-minify');
-const concat = require('gulp-concat');
-const wrap = require("gulp-wrap");
-const replace = require('gulp-string-replace');
+const gulp		= require('gulp');
+const wrap		= require('gulp-wrap');
+const rename	= require('gulp-rename');
+const replace	= require('gulp-string-replace');
 
 
 gulp.task('test', () => {
@@ -22,11 +20,9 @@ gulp.task('build-web', () => {
 		// Wrap in a function.
 		.pipe(wrap({src: './gulp/web/web.js.template'}))
 		
-		// Concat and minify.
-		.pipe(concat('namespace.js'))
-		.pipe(gulp.dest('./'))
-		.pipe(minify())
-		.pipe(gulp.dest('./'));
+		// Save
+		.pipe(rename('namespace.js'))
+		.pipe(gulp.dest('./web'))
 });
 
 gulp.task('build', ['build-web'], () => {
