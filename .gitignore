@@ -16,5 +16,6 @@ test.js
 test/all.browserify
 
 
-# Build directories
-/bin
+# Build resources
+/namespace-min.js
+/namespace.js
