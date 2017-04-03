@@ -3,7 +3,7 @@
 Small library to easily create and manage namespaces in javascript.
 
 [![Build Status](https://travis-ci.org/Oktopost/namespace.svg?branch=master)](https://travis-ci.org/Oktopost/namespace)
-[![Coverage Status](https://coveralls.io/repos/github/Oktopost/namespace/badge.svg?branch=master)](https://coveralls.io/github/Oktopost/namespace?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Oktopost/namespace/badge.svg?branch=master)](https://coveralls.io/github/Oktopost/namespace?branch=master) 
 
 ## Table Of Content
 

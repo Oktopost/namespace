@@ -25,6 +25,28 @@ suite('Namespace', () => {
 				}
 			}
 		});
+		
+		test('No default object passed to namespace, global scope used', () => {
+			var n = new Namespace();
+			
+			n.namespace('__test_namespace__.b', function(root) {
+				assert.equal(global, root);
+			});
+			
+			delete global.__test_namespace__;
+		});
+		
+		test('No default object passed to namespace, window scope used', () => {
+			global.window = {};
+			
+			var n = new Namespace();
+			
+			n.namespace('a.b', function(root) {
+				assert.equal(global.window, root);
+			});
+			
+			delete global.window;
+		});
 	});
 	
 	
@@ -63,7 +85,7 @@ suite('Namespace', () => {
 			assert.equal(obj.a.b.c.d, result);
 		});
 		
-		test('Deep namespace does not modify existing,', () => {
+		test('Deep namespace does not modify existing', () => {
 			var obj = { a: { b: {} } };
 			var objA = obj.a;
 			var objB = obj.a.b;
@@ -74,6 +96,14 @@ suite('Namespace', () => {
 			
 			assert.equal(obj.a, objA);
 			assert.equal(obj.a.b, objB);
+		});
+		
+		test('No namespace passed, return root', () => {
+			var obj = { a: { b: {} } };
+			var n = new Namespace(obj);
+			
+			assert.equal(obj, n.get(''));
+			assert.equal(obj, n.get(undefined));
 		});
 	});
 	
@@ -104,6 +134,14 @@ suite('Namespace', () => {
 			var n = new Namespace(obj);
 			
 			assert.isFalse(n.isSet('a.b.c.d'));
+		});
+		
+		test('No namespace passed, return true', () => {
+			var obj = { a: { b: {} } };
+			var n = new Namespace(obj);
+			
+			assert.isTrue(n.isSet(''));
+			assert.isTrue(n.isSet(undefined));
 		});
 	});
 	
