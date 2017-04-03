@@ -1,4 +1,4 @@
 --growl
 --ui tdd
 --recursive
---reporter dot
+--reporter spec
