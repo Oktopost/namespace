@@ -1,4 +1,5 @@
-# oktopost-namespace
+[![Build Status](https://travis-ci.org/Oktopost/namespace.svg?branch=master)](https://travis-ci.org/Oktopost/namespace)
+# oktopost-namespace 
 
 Small library to easily create and manage namespaces in javascript.
 
