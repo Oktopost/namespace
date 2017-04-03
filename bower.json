@@ -1,0 +1,16 @@
+{
+  "name": "oktopost-namespace",
+  "description": "A set of helpfull functions",
+  "main": "namespace.js",
+  "license": "MIT",
+  "moduleType": "globals",
+  "homepage": "https://github.com/Oktopost/namespace",
+  "ignore": [
+    "*",
+    "!namespace.js",
+    "!namespace-min.js"
+  ],
+  "authors": [
+    "Alexey Puchkov <alexey@oktopost.com>"
+  ]
+}
