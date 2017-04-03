@@ -171,18 +171,6 @@ suite('Namespace', () => {
 			assert.equal(obj, glob);
 		});
 		
-		test('Namespace exists, root object passed as first param', () => {
-			var obj = { a: {} };
-			var n = new Namespace(obj);
-			var glob;
-			
-			n.namespace('a', function(a) {
-				glob = a;
-			});
-			
-			assert.equal(obj, glob);
-		});
-		
 		test('Namespace not exists, namespace object created', () => {
 			var obj = { };
 			var n = new Namespace(obj);

@@ -1,6 +1,4 @@
 'use strict';
 
 
-module.exports = {
-	Namespace: require('./src/Namespace') 
-};
+module.exports = require('./src/Namespace');
