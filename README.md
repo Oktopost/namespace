@@ -1,4 +1,4 @@
-# oktopost-namespace 
+# Namespace 
 
 Small library to easily create and manage namespaces in javascript.
 
