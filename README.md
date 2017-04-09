@@ -18,6 +18,7 @@ Small library to easily create and manage namespaces in javascript.
         * [isSet](#isset)
         * [get](#get)
         * [namespace](#namespace)
+        * [getCreator](#get-creator)
   * [Web Example](#web-example)
 
 
@@ -114,6 +115,32 @@ myNamespace.namespace('a.b', function(root) {
     console.log(this); // Will print window.a.b object.
     console.log(root); // Will print the root object passed to namespace. In this case window.
 });
+```
+
+#### getCreator
+``` getCreator(): function(string path, [function({} root) callback])```
+
+This method will return this.namespace.bind(this), which allows to use the namespace method 
+without referencing the original object.
+
+```js
+var myNamespace = new Namespace();
+
+var namespaceWrong = myNamespace.namespace;
+
+// Will throw and exception because scope is window and not myNamespace
+namespaceWrong('a.b', function(root) {
+    // ...
+});
+
+
+var namespaceCorrect = myNamespace.getCreator();
+
+// Will work
+namespaceWrong('a.b', function(root) {
+    // ...
+});
+
 ```
 
 ## Web Example
