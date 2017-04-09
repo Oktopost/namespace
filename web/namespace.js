@@ -9,9 +9,6 @@
  */
 function Namespace(root) {
 	this._root = root || this._getRoot();
-	
-	this.namespace = this.get.bind(this);
-	this.namespace = this.namespace.bind(this);
 }
 
 
@@ -102,6 +99,13 @@ Namespace.prototype.isSet = function (namespace) {
 	}
 	
 	return (this._walk(namespace, function() { return false; }) !== false);
+};
+
+/**
+ * @return {function(string, function()=)} Returns the namespace method binded to this object. 
+ */
+Namespace.prototype.getCreator = function() {
+	return this.namespace.bind(this);
 };
 
 
