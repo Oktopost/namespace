@@ -16,11 +16,11 @@ function Namespace(root) {
  * @private
  */
 Namespace.prototype._getRoot = function () {
-	if (typeof window === 'undefined') {
-		return global;
-	} else {
+	if (typeof window !== 'undefined') {
 		return window;
 	}
+	
+	return {};
 };
 
 

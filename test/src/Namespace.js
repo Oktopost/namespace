@@ -26,14 +26,29 @@ suite('Namespace', () => {
 			}
 		});
 		
-		test('No default object passed to namespace, global scope used', () => {
+		test('No default object passed to namespace, new object used', () => {
 			var n = new Namespace();
 			
-			n.namespace('__test_namespace__.b', function(root) {
-				assert.equal(global, root);
+			n.namespace('', function(root) {
+				assert.deepEqual({}, root);
 			});
 			
 			delete global.__test_namespace__;
+		});
+		
+		test('No default object passed to namespace, new object used for each namespace', () => {
+			var obj1;
+			var obj2;
+			
+			(new Namespace()).namespace('a.b', function(container) {
+				obj1 = container;
+			});
+			
+			(new Namespace()).namespace('b.b', function(container) {
+				obj2 = container;
+			});
+			
+			assert.notEqual(obj1, obj2);
 		});
 		
 		test('No default object passed to namespace, window scope used', () => {
@@ -41,11 +56,14 @@ suite('Namespace', () => {
 			
 			var n = new Namespace();
 			
-			n.namespace('a.b', function(root) {
-				assert.equal(global.window, root);
-			});
-			
-			delete global.window;
+			try {
+				n.namespace('a.b', function(root) {
+					assert.equal(global.window, root);
+				});
+			} catch (e) {
+				delete global.window;
+				throw e;
+			}
 		});
 	});
 	
