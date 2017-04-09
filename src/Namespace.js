@@ -100,5 +100,12 @@ Namespace.prototype.isSet = function (namespace) {
 	return (this._walk(namespace, function() { return false; }) !== false);
 };
 
+/**
+ * @return {function(string, function()=)} Returns the namespace method binded to this object. 
+ */
+Namespace.prototype.getCreator = function() {
+	return this.namespace.bind(this);
+};
+
 
 module.exports = Namespace;

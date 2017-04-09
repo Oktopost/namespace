@@ -231,4 +231,23 @@ suite('Namespace', () => {
 			assert.isDefined(obj.a.b.c);
 		});
 	});
+	
+	suite('getCreator', () => {
+		test('function returned', () => {
+			assert.isFunction((new Namespace({})).getCreator());
+		});
+		
+		test('Function acts as the namespace function', () => {
+			var obj = {};
+			var creator = (new Namespace(obj)).getCreator();
+			
+			
+			creator('a', function() {
+				assert.equal(obj.a, this);
+				this.b = 2;
+			});
+			
+			assert.deepEqual({ a: { b: 2 } }, obj);
+		});
+	})
 });

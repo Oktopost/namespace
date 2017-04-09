@@ -9,6 +9,9 @@
  */
 function Namespace(root) {
 	this._root = root || this._getRoot();
+	
+	this.namespace = this.get.bind(this);
+	this.namespace = this.namespace.bind(this);
 }
 
 

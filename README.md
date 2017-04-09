@@ -123,7 +123,7 @@ myNamespace.namespace('a.b', function(root) {
 window.MyApp = new Namespace(window);
 
 // My help readability but should be used only in final applications and not libraries.
-window.namespace = MyApp.namespace;
+window.namespace = MyApp.getCreator();
 ```
 
 **public/js/lib/SomeClass.js**
