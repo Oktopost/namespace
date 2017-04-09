@@ -18,7 +18,7 @@ Small library to easily create and manage namespaces in javascript.
         * [isSet](#isset)
         * [get](#get)
         * [namespace](#namespace)
-        * [getCreator](#get-creator)
+        * [getCreator](#getcreator)
   * [Web Example](#web-example)
 
 
