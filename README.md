@@ -2,7 +2,7 @@
 
 Small library to easily create and manage namespaces in javascript.
 
-[![npm version](https://badge.fury.io/js/oktopost-namespace.svg)](https://badge.fury.io/js/oktopost-namespace)
+[![npm version](https://badge.fury.io/js/oktopost-namespace.svg?5)](https://badge.fury.io/js/oktopost-namespace)
 [![Build Status](https://travis-ci.org/Oktopost/namespace.svg?branch=master)](https://travis-ci.org/Oktopost/namespace)
 [![Coverage Status](https://coveralls.io/repos/github/Oktopost/namespace/badge.svg?branch=master&1)](https://coveralls.io/github/Oktopost/namespace?branch=master&1)
 
