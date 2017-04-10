@@ -8,7 +8,7 @@
  * @param {{}=} root
  */
 function Namespace(root) {
-	this._root = root || this._getRoot();
+	this._root = root || this._getContainer();
 }
 
 
@@ -16,7 +16,7 @@ function Namespace(root) {
  * @return {*}
  * @private
  */
-Namespace.prototype._getRoot = function () {
+Namespace.prototype._getContainer = function () {
 	if (typeof window !== 'undefined') {
 		return window;
 	}

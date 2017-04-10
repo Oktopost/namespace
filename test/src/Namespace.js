@@ -18,6 +18,7 @@ suite('Namespace', () => {
 		test('Object is empty', () => {
 			var n = new Namespace({});
 			delete n._root;
+			delete n._container;
 			
 			for (var k in n) {
 				if (n.hasOwnProperty(k)) {
@@ -29,8 +30,8 @@ suite('Namespace', () => {
 		test('No default object passed to namespace, new object used', () => {
 			var n = new Namespace();
 			
-			n.namespace('', function(root) {
-				assert.deepEqual({}, root);
+			n.namespace('', function(container) {
+				assert.deepEqual({}, container);
 			});
 			
 			delete global.__test_namespace__;
@@ -57,13 +58,26 @@ suite('Namespace', () => {
 			var n = new Namespace();
 			
 			try {
-				n.namespace('a.b', function(root) {
-					assert.equal(global.window, root);
+				n.namespace('a.b', function(container) {
+					assert.equal(global.window, container);
 				});
 			} catch (e) {
 				delete global.window;
 				throw e;
 			}
+		});
+	});
+	
+	
+	suite('root', () => {
+		test('Object returned', () => {
+			assert.isObject((new Namespace()).root());
+		});
+		
+		test('Root object contains created namespaces', () => {
+			var namespace = new Namespace();
+			namespace.namespace('a.b');
+			assert.deepEqual({a: { b : {} } }, namespace.root());
 		});
 	});
 	
@@ -120,8 +134,8 @@ suite('Namespace', () => {
 			var obj = { a: { b: {} } };
 			var n = new Namespace(obj);
 			
-			assert.equal(obj, n.get(''));
-			assert.equal(obj, n.get(undefined));
+			assert.deepEqual(obj, n.get(''));
+			assert.deepEqual(obj, n.get(undefined));
 		});
 	});
 	
@@ -177,7 +191,7 @@ suite('Namespace', () => {
 			assert.equal(obj.a, self);
 		});
 		
-		test('Namespace exists, root object passed as first param', () => {
+		test('Namespace exists, container passed as first param', () => {
 			var obj = { a: {} };
 			var n = new Namespace(obj);
 			var glob;

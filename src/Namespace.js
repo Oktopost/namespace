@@ -4,10 +4,16 @@
 /**
  * @class Namespace
  * 
- * @param {{}=} root
+ * @param {{}=} container
  */
-function Namespace(root) {
-	this._root = root || this._getRoot();
+function Namespace(container) {
+	this._root = {};
+	this._container = container || this._getContainer();
+	
+	for (var key in container)
+	{
+		this._root[key] = container[key];
+	}
 }
 
 
@@ -15,14 +21,13 @@ function Namespace(root) {
  * @return {*}
  * @private
  */
-Namespace.prototype._getRoot = function () {
+Namespace.prototype._getContainer = function () {
 	if (typeof window !== 'undefined') {
 		return window;
 	}
 	
 	return {};
 };
-
 
 /**
  * @param {{}} namespace
@@ -34,6 +39,11 @@ Namespace.prototype._create = function (namespace, path) {
 	for (var i = 0; i < path.length; i++) {
 		var name = path[i];
 		namespace[name] = {};
+		
+		if (namespace === this._root) {
+			this._container[name] = this._root[name];
+		}
+		
 		namespace = namespace[name];
 	}
 	
@@ -65,6 +75,13 @@ Namespace.prototype._walk = function (namespace, onUndefined) {
 
 
 /**
+ * @return {{}}
+ */
+Namespace.prototype.root = function () {
+	return this._root;
+};
+
+/**
  * @param {string} namespace
  * @return {{}}
  */
@@ -73,7 +90,7 @@ Namespace.prototype.get = function (namespace) {
 		return this._root;
 	}
 	
-	return this._walk(namespace, this._create);
+	return this._walk(namespace, this._create.bind(this));
 };
 
 /**
@@ -84,7 +101,7 @@ Namespace.prototype.namespace = function (namespace, scope) {
 	var namespaceObject = this.get(namespace);
 	
 	if (scope) { 
-		scope.call(namespaceObject, this._root);
+		scope.call(namespaceObject, this._container);
 	}
 };
 
