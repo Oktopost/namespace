@@ -150,7 +150,7 @@ namespaceWrong('a.b', function(root) {
 ```js
 window.MyApp = new Namespace(window);
 
-// My help readability but should be used only in final applications and not libraries.
+// May help readability but should be used only in final applications and not libraries.
 window.namespace = MyApp.getCreator();
 ```
 
