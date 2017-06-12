@@ -1,0 +1,36 @@
+{
+  "name": "oktopost-namespace",
+  "version": "1.2.0",
+  "description": "Namespace library for js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "test-cover": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Oktopost/spacename.git"
+  },
+  "authors": [
+    {
+      "name": "Alexey Puchkov",
+      "email": "alexey@oktopost.com",
+      "url": "http://www.oktopost.com/"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Oktopost/spacename/issues"
+  },
+  "homepage": "https://github.com/Oktopost/spacename#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-string-replace": "^0.3.1",
+    "gulp-wrap": "^0.13.0",
+    "istanbul": "^0.4.5",
+    "coveralls": "2.10.0",
+    "mocha": "^3.2.0"
+  }
+}

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 
 const Consts = require('./Consts');
@@ -11,6 +11,7 @@ function ProxyObject()
 	
 	this._source	= null;
 	this._proxy		= null;
+	this._target	= {};
 	this._stop		= false;
 	this._handler	= { get: this._get };
 	
@@ -69,6 +70,11 @@ ProxyObject.prototype.proxy = function ()
 ProxyObject.prototype.source = function ()
 {
 	return this._source;
+};
+
+ProxyObject.prototype.target = function ()
+{
+	return this._target;
 };
 
 
