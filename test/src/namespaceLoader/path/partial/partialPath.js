@@ -5,7 +5,7 @@ const partialPath = require('../../../../../src/namespaceLoader/path/partial/par
 const assert = require('chai').assert;
 
 
-suite.only('partialPath', () => 
+suite('partialPath', () => 
 {
 	suite('Namespace', () => 
 	{
