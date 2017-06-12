@@ -1,7 +1,7 @@
 'use strict';
 
 
-const ResolverCreatorFactory = require('../../../../src/namespaceLoader/path/ResolverCreatorFactory');
+const ResolverCreatorFactory = require('../../../../src/NamespaceLoader/path/ResolverCreatorFactory');
 const assert = require('chai').assert;
 
 

@@ -1,0 +1,42 @@
+'use strict';
+
+
+/**
+ * @param {string} fullPath
+ * @param {string} name
+ * @param {{}} root
+ * @param {{}} head
+ * @constructor
+ */
+function Cursor(fullPath, name, root, head)
+{
+	this.fullName	= fullPath;
+	this.name		= name;
+	this.root		= root;
+	this.head		= head;
+}
+
+
+Cursor.prototype.getFullPathForChild = function (name)
+{
+	return (this.fullName.length > 0 ?
+		this.fullName + '.' + name : 
+		name
+	);
+};
+
+Cursor.prototype.createChild = function (name)
+{
+	var fullName = this.getFullPathForChild(name);
+	return new Cursor(fullName, name, this.root, {});
+};
+
+
+Cursor.createRoot = function ()
+{
+	var root = {};
+	return new Cursor('', '', root, root);
+};
+
+
+module.exports = Cursor;

@@ -1,7 +1,7 @@
 'use strict';
 
 
-const partialPath = require('../../../../../src/namespaceLoader/path/partial/partialPath');
+const partialPath = require('../../../../../src/NamespaceLoader/path/partial/partialPath');
 const assert = require('chai').assert;
 
 

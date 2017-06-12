@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Loader = require('../../../src/namespaceLoader/Loader');
+const Loader = require('../../../src/NamespaceLoader/Loader');
 const assert = require('chai').assert;
 
 
@@ -166,6 +166,7 @@ suite('Loader', () =>
 		});
 	});
 	
+	
 	suite('tryGet', () =>
 	{
 		test('Namespace not found, null returned', () => 
@@ -193,6 +194,7 @@ suite('Loader', () =>
 			assert.equal(object, loader.tryGet('abc'));
 		});
 	});
+	
 	
 	suite('get', () =>
 	{

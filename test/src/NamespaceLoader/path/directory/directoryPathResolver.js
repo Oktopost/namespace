@@ -1,7 +1,7 @@
 'use strict';
 
 
-const directoryPathResolver = require('../../../../../src/namespaceLoader/path/directory/directoryPathResolver');
+const directoryPathResolver = require('../../../../../src/NamespaceLoader/path/directory/directoryPathResolver');
 const assert = require('chai').assert;
 
 
