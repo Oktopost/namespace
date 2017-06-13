@@ -11,7 +11,7 @@ const path	= require('path');
 suite('ApplicationConfigFile', () =>
 {
 	const MAIN_DIR = __dirname + '/ApplicationConfigFile_test';
-	const FILE_NAME = 'namespace.json';
+	const FILE_NAME = '.namespace.json';
 	
 	
 	function getPath(p)
