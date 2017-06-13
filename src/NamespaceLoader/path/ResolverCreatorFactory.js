@@ -1,8 +1,8 @@
 'use strict';
 
 
-const partialCreator			= require('./partial/partialCreator');
-const directoryResolveCreator	= require('./directory/directoryResolveCreator');
+const partialCreator			= require('./Partial/partialCreator');
+const directoryResolveCreator	= require('./Directory/directoryResolveCreator');
 
 
 const INITIAL_MAP = {
