@@ -13,6 +13,7 @@ const ProxyPreset = require('./ProxyPreset');
 function ProxyHandler(cursor, setter, getter)
 {
 	this._handler	= null;
+	this._proxy		= null;
 	this._setter	= setter || (() => {});
 	this._getter	= getter;
 	this._cursor	= cursor;
@@ -21,6 +22,8 @@ function ProxyHandler(cursor, setter, getter)
 		get: this._get.bind(this),
 		set: this._set.bind(this)
 	});
+	
+	this._proxy = new Proxy(cursor.head, this._handler);
 }
 
 
@@ -60,6 +63,14 @@ ProxyHandler.prototype._set = function (target, name, value)
 ProxyHandler.prototype.handler = function ()
 {
 	return this._handler;
+};
+
+/**
+ * @return {Proxy}
+ */
+ProxyHandler.prototype.proxy = function ()
+{
+	return this._proxy;
 };
 
 

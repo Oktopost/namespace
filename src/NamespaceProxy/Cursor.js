@@ -17,6 +17,10 @@ function Cursor(fullPath, name, root, head)
 }
 
 
+/**
+ * @param {string} name
+ * @return {string}
+ */
 Cursor.prototype.getFullPathForChild = function (name)
 {
 	return (this.fullName.length > 0 ?
@@ -25,13 +29,19 @@ Cursor.prototype.getFullPathForChild = function (name)
 	);
 };
 
+/**
+ * @param name
+ * @return {Cursor}
+ */
 Cursor.prototype.createChild = function (name)
 {
 	var fullName = this.getFullPathForChild(name);
 	return new Cursor(fullName, name, this.root, {});
 };
 
-
+/**
+ * @return {Cursor}
+ */
 Cursor.createRoot = function ()
 {
 	var root = {};
