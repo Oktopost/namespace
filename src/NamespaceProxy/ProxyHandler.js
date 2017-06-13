@@ -34,7 +34,7 @@ ProxyHandler.prototype._get = function (target, name)
 		var res = this._getter(this._cursor, name);
 		
 		if (typeof res === 'undefined')
-			throw new Error('Could not find property ' + name + ' inside namespace <' + this._cursor.fullName + '>');
+			return;
 		
 		target[name] = res;
 	}

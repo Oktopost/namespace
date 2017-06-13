@@ -5,7 +5,7 @@ const ChainCall = require('./ChainCall');
 
 
 /**
- * @param {function|{}} initial
+ * @param {function|{}=} initial
  * @constructor
  */
 function GetSetChain(initial)

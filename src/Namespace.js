@@ -4,15 +4,19 @@
 /**
  * @class Namespace
  * 
- * @param {{}=} container
+ * @param {*=} container
+ * @param {*=} root
  */
-function Namespace(container) {
-	this._root = {};
+function Namespace(container, root) {
+	this._root = root || {};
 	this._container = container || this._getContainer();
 	
 	for (var key in container)
 	{
-		this._root[key] = container[key];
+		if (container.hasOwnProperty(key))
+		{
+			this._root[key] = container[key];
+		}
 	}
 }
 

@@ -22,9 +22,9 @@ const ProxyPreset = {
 		
 		for (var key in PRESET)
 		{
-			if (target.hasOwnProperty(key))
+			if (PRESET.hasOwnProperty(key))
 			{
-				clone[key] = target[key];
+				clone[key] = PRESET[key];
 			}
 		}
 		
@@ -38,7 +38,7 @@ const ProxyPreset = {
 	merge: function (target)
 	{
 		var clone = ProxyPreset.clone();
-		
+		 
 		for (var key in target)
 		{
 			if (target.hasOwnProperty(key))
