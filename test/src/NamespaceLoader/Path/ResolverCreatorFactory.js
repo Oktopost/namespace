@@ -5,7 +5,7 @@ const ResolverCreatorFactory = require('../../../../src/NamespaceLoader/Path/Res
 const assert = require('chai').assert;
 
 
-suite.only('ResolverCreatorFactory', () => 
+suite('ResolverCreatorFactory', () => 
 {
 	suite('getCreator', () => 
 	{
