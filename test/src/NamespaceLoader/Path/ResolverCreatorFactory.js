@@ -1,11 +1,11 @@
 'use strict';
 
 
-const ResolverCreatorFactory = require('../../../../src/NamespaceLoader/path/ResolverCreatorFactory');
+const ResolverCreatorFactory = require('../../../../src/NamespaceLoader/Path/ResolverCreatorFactory');
 const assert = require('chai').assert;
 
 
-suite('ResolverCreatorFactory', () => 
+suite.only('ResolverCreatorFactory', () => 
 {
 	suite('getCreator', () => 
 	{
@@ -38,6 +38,37 @@ suite('ResolverCreatorFactory', () =>
 		});
 	});
 	
+	suite('getPathResolveCallback', () => 
+	{
+		test('Empty map, error thrown', () => 
+		{
+			assert.throws(() => 
+			{
+				(new ResolverCreatorFactory()).getPathResolveCallback('a');
+			});
+		});
+		
+		test('Key not in map, error thrown', () => 
+		{
+			var subject = new ResolverCreatorFactory();
+			subject.registerPathCallback('a', () => {});
+			
+			assert.throws(() => 
+			{
+				subject.getPathResolveCallback('b');
+			});
+		});
+		
+		test('Key in map, element returned', () => 
+		{
+			var subject = new ResolverCreatorFactory();
+			var func = () => {};
+			
+			subject.registerPathCallback('a', func);
+			assert.equal(func, subject.getPathResolveCallback('a'));
+		});
+	});
+	
 	suite('clone', () => 
 	{
 		test('Instance of ResolverCreatorFactory returned', () => {
@@ -47,7 +78,7 @@ suite('ResolverCreatorFactory', () =>
 			assert.instanceOf(clone, ResolverCreatorFactory);
 		});
 		
-		test('New Instance oreturned', () => {
+		test('New Instance returned', () => {
 			var subject = new ResolverCreatorFactory();
 			var clone = subject.clone();
 			
@@ -74,6 +105,28 @@ suite('ResolverCreatorFactory', () =>
 			subject.register('b', () => {});
 			
 			assert.throws(() => { clone.getCreator('b'); });
+		});
+		
+		test('Path map copied', () => {
+			var subject = new ResolverCreatorFactory();
+			
+			subject.registerPathCallback('a', () => {});
+			
+			var clone = subject.clone();
+			
+			assert.equal(subject.getPathResolveCallback('a'), clone.getPathResolveCallback('a'));
+		});
+		
+		test('Path map copied by value', () => {
+			var subject = new ResolverCreatorFactory();
+			
+			subject.registerPathCallback('a', () => {});
+			
+			var clone = subject.clone();
+			
+			subject.registerPathCallback('b', () => {});
+			
+			assert.throws(() => { clone.getPathResolveCallback('b'); });
 		});
 	});
 	
@@ -111,6 +164,40 @@ suite('ResolverCreatorFactory', () =>
 		});
 	});
 	
+	suite('registerPathCallback', () =>
+	{
+		test('Register single function', () =>
+		{
+			var subject = new ResolverCreatorFactory();
+			var func = () => {};
+			
+			subject.registerPathCallback('a', func);
+			assert.equal(func, subject.getPathResolveCallback('a'));
+		});
+		
+		test('Register object', () =>
+		{
+			var subject = new ResolverCreatorFactory();
+			var func = () => {};
+			var obj = {	a: func };
+			
+			subject.registerPathCallback(obj);
+			assert.equal(func, subject.getPathResolveCallback('a'));
+		});
+		
+		test('Register object with number of functions', () =>
+		{
+			var subject = new ResolverCreatorFactory();
+			var funcA = () => {};
+			var funcB = () => {};
+			var obj = {	a: funcA, b: funcB };
+			
+			subject.registerPathCallback(obj);
+			assert.equal(funcA, subject.getPathResolveCallback('a'));
+			assert.equal(funcB, subject.getPathResolveCallback('b'));
+		});
+	});
+	
 	suite('static getCreator', () =>
 	{
 		test('instance getCreator called', () =>
@@ -134,6 +221,35 @@ suite('ResolverCreatorFactory', () =>
 			ResolverCreatorFactory._instance = { getCreator: (a) => { calledWith = a; }};
 			
 			ResolverCreatorFactory.getCreator('abc');
+			delete ResolverCreatorFactory._instance;
+			
+			assert.equal('abc', calledWith);
+		});
+	});
+	
+	suite('static getPathResolveCallback', () =>
+	{
+		test('instance getPathResolveCallback called', () =>
+		{
+			var isCalled = false;
+			
+			delete ResolverCreatorFactory._instance;
+			ResolverCreatorFactory._instance = { getPathResolveCallback: () => { isCalled = true; }};
+			
+			ResolverCreatorFactory.getPathResolveCallback('a');
+			delete ResolverCreatorFactory._instance;
+			
+			assert.equal(true, isCalled);
+		});
+		
+		test('Parameter passed to instance getPathResolveCallback', () =>
+		{
+			var calledWith;
+			
+			delete ResolverCreatorFactory._instance;
+			ResolverCreatorFactory._instance = { getPathResolveCallback: (a) => { calledWith = a; }};
+			
+			ResolverCreatorFactory.getPathResolveCallback('abc');
 			delete ResolverCreatorFactory._instance;
 			
 			assert.equal('abc', calledWith);

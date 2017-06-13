@@ -1,7 +1,7 @@
 'use strict';
 
 
-const ResolverCreatorFactory = require('./path/ResolverCreatorFactory');
+const ResolverCreatorFactory = require('./Path/ResolverCreatorFactory');
 
 
 
