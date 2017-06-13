@@ -6,9 +6,16 @@ const path		= require('path');
 
 
 const FILE_NAME			= 'namespace.json';
-const NODE_MODULE_DIR	= 'node_modules'; 
+const NODE_MODULE_DIR	= 'node_modules';
 
 
+/**
+ * @param {string} dirName
+ * @param {string} p
+ * @param {function(string, *)} callback
+ * @param {function(string, Error)} onError
+ * @private
+ */
 function _checkFile(dirName, p, callback, onError)
 {
 	if (fs.existsSync(p))
@@ -29,7 +36,7 @@ function _checkFile(dirName, p, callback, onError)
 
 /**
  * @param {string} root
- * @param {function(string, data)} callback
+ * @param {function(string, *)} callback
  * @param {function(string, Error)} onError
  */
 function configSearch(root, callback, onError)

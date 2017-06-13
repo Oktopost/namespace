@@ -5,7 +5,7 @@ const path 	= require('path');
 const fs	= require('fs');
 
 
-const FILE_NAME = 'namespace.json';
+const FILE_NAME = '.namespace.json';
 
 
 /**
