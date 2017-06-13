@@ -24,7 +24,7 @@ function _combineLoader(configLoaders, module, type, localLoaders)
 		if (!localLoaders.hasOwnProperty(key))
 			continue;
 		
-		if (typeof configLoaders[key] === 'undefined')
+		if (typeof configLoaders[key] !== 'undefined')
 		{
 			throw new Error('Error when loading loader of module ' + module + 
 				'. Loader for the key ' + key + ' already defined');
@@ -51,9 +51,11 @@ function _combineMain(config, module, data)
 	if (typeof data['map'] === 'undefined')
 		return;
 	
-	for (var key in data)
+	var dataMap = data.map;
+	
+	for (var key in dataMap)
 	{
-		if (!data.hasOwnProperty(key))
+		if (!dataMap.hasOwnProperty(key))
 			continue;
 		
 		if (typeof config.map[key] === 'undefined')
@@ -63,7 +65,7 @@ function _combineMain(config, module, data)
 		
 		try
 		{
-			_combineLoader(config.map[key], module, key, data[key]);
+			_combineLoader(config.map[key], module, key, dataMap[key]);
 		}
 		catch (e)
 		{
