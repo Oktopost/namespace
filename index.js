@@ -3,11 +3,12 @@
 
 const Namespace = require('./src/Namespace');
 
-const buildDynamic = require('./src/Setup/buildDynamic');
-const Initializers = require('./src/Setup/Initializers');
+const Root			= require('./src/Setup/Root');
+const buildDynamic	= require('./src/Setup/buildDynamic');
+const Initializers	= require('./src/Setup/Initializers');
 
-const DependencyLogger = require('./src/NamespaceProxy/GetSetHandlers/DependencyLogger');
-const Dependencies = require('./src/Build/Dependencies');
+const DependencyLogger	= require('./src/NamespaceProxy/GetSetHandlers/DependencyLogger');
+const Dependencies		= require('./src/Build/Dependencies');
 
 
 /**
@@ -25,16 +26,26 @@ function invokeCallback(namespace, callback)
 		require(callback);
 	}
 	
-	return namespace;
+	return namespace.root();
 }
 
 
-module.exports = {
+const INDEX = {
+
+	/**
+	 * @param {string} dir
+	 * @return {{in: INDEX.in, dynamic: INDEX.dynamic, static: INDEX.static, getDependencies: INDEX.getDependencies, setupDynamic: INDEX.setupDynamic}}
+	 */
+	in: function (dir)
+	{
+		Root.set(dir);
+		return INDEX; 
+	},
 	
 	dynamic: function (callback)
 	{
 		var namespace = buildDynamic(Initializers.defaultDynamicSetup);
-		invokeCallback(namespace, callback);
+		return invokeCallback(namespace, callback);
 	},
 	
 	static: function (callback)
@@ -56,6 +67,8 @@ module.exports = {
 		);
 			
 		callback(object, namespace);
+		
+		return namespace.root();
 	},
 	
 	setupDynamic: function (setup, callback)
@@ -65,6 +78,8 @@ module.exports = {
 			setup
 		);
 		
-		invokeCallback(namespace, callback);
+		return invokeCallback(namespace, callback);
 	}
 };
+
+module.exports = INDEX;
