@@ -1,8 +1,13 @@
 'use strict';
 
 
+const Namespace = require('./src/Namespace');
+
 const buildDynamic = require('./src/Setup/buildDynamic');
 const Initializers = require('./src/Setup/Initializers');
+
+const DependencyLogger = require('./src/NamespaceProxy/GetSetHandlers/DependencyLogger');
+const Dependencies = require('./src/Build/Dependencies');
 
 
 /**
@@ -35,7 +40,25 @@ module.exports = {
 	
 	static: function (callback)
 	{
+		var namespace = new Namespace();
+		global.namespace = namespace.getCreator();
+		return invokeCallback(namespace, callback)
+	},
+	
+	getDependencies: function (setup, callback)
+	{
+		var dep = new DependencyLogger(); 
+		var object = new Dependencies(dep);
 		
+		return buildDynamic(
+				Initializers.defaultDynamicSetup,
+				(chain) => { chain.add(dep) },
+				setup
+			)
+			.then((namespace) => 
+			{
+				callback(object, namespace);
+			});
 	},
 	
 	setupDynamic: function (setup, callback)

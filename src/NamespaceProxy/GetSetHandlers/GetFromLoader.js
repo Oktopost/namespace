@@ -21,7 +21,18 @@ GetFromLoader.prototype.get = function (cursor, name, callback)
 	var fullName	= cursor.getFullPathForChild(name);
 	var res			= this._loader.tryGet(fullName);
 	
-	return res === null ? callback() : res;
+	if (res === null)
+	{
+		return callback();
+	}
+	else if (typeof cursor.head[name] !== 'undefined')
+	{
+		return cursor.head[name]
+	}
+	else
+	{
+		return res;
+	}
 };
 
 

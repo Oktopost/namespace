@@ -7,8 +7,10 @@
 function DependencyLogger()
 {
 	this._current 		= '';
-	this._stuck			= [];
-	this._dependencies	= [];
+	this._currentStack	= [];
+	this._depsStack		= [];
+	this._stack			= [];
+	this._dependencies	= {};
 }
 
 
@@ -19,19 +21,14 @@ function DependencyLogger()
  */
 DependencyLogger.prototype.get = function (cursor, name, callback)
 {
-	this._stuck.push(this._current);
-	this._current = cursor.getFullPathForChild(name);
+	this._stack.push(this._current);
+	this._depsStack.push(this._currentStack);
 	
-	try
-	{
-		return callback();
-	}
-	finally 
-	{
-		this._current = this._stuck.pop();
-	}
+	this._current = cursor.getFullPathForChild(name);
+	this._currentStack = [];
+	
+	return callback();
 };
-
 
 /**
  * @param {Cursor} cursor
@@ -41,19 +38,32 @@ DependencyLogger.prototype.get = function (cursor, name, callback)
  */
 DependencyLogger.prototype.set = function (cursor, name, value, callback)
 {
+	callback();
+	
+	var fullName = cursor.getFullPathForChild(name);
+	
+	while (this._current !== fullName)
+	{
+		this._current = this._stack.pop();
+		this._currentStack = this._depsStack.pop().concat(this._currentStack);
+	}
+	
 	if (typeof this._dependencies[this._current] === 'undefined')
 	{
 		this._dependencies[this._current] = [];
 	}
 	
-	var fullName = cursor.getFullPathForChild(name);
-	
-	if (fullName !== this._current)
-	{
-		this._dependencies[this._current].push(cursor.getFullPathForChild(name));
-	}
-	
-	return callback();
+	this._dependencies[this._current] = this._dependencies[this._current].concat(this._currentStack);
+	this._currentStack = this._depsStack.pop();
+	this._currentStack.push(fullName);
+};
+
+/**
+ * @return {{}}
+ */
+DependencyLogger.prototype.getDependenciesMap = function () 
+{
+	return this._dependencies;
 };
 
 

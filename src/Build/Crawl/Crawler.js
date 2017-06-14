@@ -8,13 +8,13 @@ function Crawler(onDependency)
 {
 	this._onComplete	= null;
 	this._onError		= null;
-	this._onDependency	= onDependency;
+	this._onDependency	= onDependency || ((path) => { require(path); });
 }
 
 
 Crawler.prototype._invokeComplete = function ()
 {
-	if (typeof this._onComplete !== 'undefined')
+	if (this._onComplete)
 	{
 		this._onComplete();
 	}
@@ -25,9 +25,13 @@ Crawler.prototype._invokeComplete = function ()
  */
 Crawler.prototype._invokeError = function (error)
 {
-	if (typeof this._onError !== 'undefined')
+	if (this._onError)
 	{
 		this._onError(error);
+	}
+	else
+	{
+		throw error;
 	}
 };
 
@@ -57,15 +61,17 @@ Crawler.prototype.onError = function (callback)
  */
 Crawler.prototype.scan = function (path)
 {
-	try 
+	var self = this;
+	
+	try
 	{
 		var result = this._doScan(path);
 		
 		if (result instanceof Promise)
 		{
 			result
-				.then(function () { this._invokeComplete(); })
-				.catch(function () { this._invokeError(); });
+				.then(function () { self._invokeComplete(); })
+				.catch(function () { self._invokeError(); });
 		}
 		else if (result === true)
 		{

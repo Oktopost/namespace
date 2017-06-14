@@ -5,6 +5,11 @@ const fs = require('fs');
 const Crawler = require('./Crawler');
 
 
+/**
+ * @param onDependency
+ * 
+ * @constructor
+ */
 function SyncFS(onDependency)
 {
 	Crawler.call(this, onDependency);

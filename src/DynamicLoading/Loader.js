@@ -1,6 +1,9 @@
 'use strict';
 
 
+const path = require('path');
+
+
 function Loader()
 {
 	this._map = {};
@@ -39,6 +42,21 @@ Loader.prototype.resolve = function (namespace)
 };
 
 /**
+ * @param {string} p
+ * @return {string}
+ * @private
+ */
+Loader.prototype._resolveToFullPath = function (p)
+{
+	if (p.substr(0, 2) === './')
+	{
+		p = path.dirname(require.main.filename) + '/' + p.substr(2);
+	}
+	
+	return p;
+};
+
+/**
  * @param {string} namespace
  * @return {string|null}
  */
@@ -69,7 +87,10 @@ Loader.prototype.tryResolve = function (namespace)
 		bestMatch = attr.length;
 	}
 	
-	return (bestMatchResolver === null ? null : bestMatchResolver(namespace));
+	return (bestMatchResolver === null ? 
+		null : 
+		this._resolveToFullPath(bestMatchResolver(namespace))
+	);
 };
 
 /**
@@ -78,8 +99,8 @@ Loader.prototype.tryResolve = function (namespace)
  */
 Loader.prototype.get = function (namespace)
 {
-	var path = this.resolve(namespace);
-	return require(path);
+	var p = this.resolve(namespace);
+	return require(p);
 };
 
 /**
