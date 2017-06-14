@@ -29,7 +29,11 @@ function ProxyHandler(cursor, setter, getter)
 
 ProxyHandler.prototype._get = function (target, name)
 {
-	if (typeof target[name] === 'undefined')
+	if (typeof name === 'symbol' || name === 'inspect')
+	{
+		return undefined;
+	}
+	else if (typeof target[name] === 'undefined')
 	{
 		var res = this._getter(this._cursor, name);
 		
