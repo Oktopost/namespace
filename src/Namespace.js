@@ -3,21 +3,11 @@
 
 /**
  * @class Namespace
- * 
- * @param {*=} container
  * @param {*=} root
  */
-function Namespace(container, root) {
+function Namespace(root)
+{
 	this._root = root || {};
-	this._container = container || this._getContainer();
-	
-	for (var key in container)
-	{
-		if (container.hasOwnProperty(key))
-		{
-			this._root[key] = container[key];
-		}
-	}
 }
 
 
@@ -25,8 +15,10 @@ function Namespace(container, root) {
  * @return {*}
  * @private
  */
-Namespace.prototype._getContainer = function () {
-	if (typeof window !== 'undefined') {
+Namespace.prototype._getContainer = function ()
+{
+	if (typeof window !== 'undefined')
+	{
 		return window;
 	}
 	
@@ -39,15 +31,12 @@ Namespace.prototype._getContainer = function () {
  * @return {{}}
  * @private
  */
-Namespace.prototype._create = function (namespace, path) {
-	for (var i = 0; i < path.length; i++) {
+Namespace.prototype._create = function (namespace, path)
+{
+	for (var i = 0; i < path.length; i++)
+	{
 		var name = path[i];
 		namespace[name] = {};
-		
-		if (namespace === this._root) {
-			this._container[name] = this._root[name];
-		}
-		
 		namespace = namespace[name];
 	}
 	
@@ -59,15 +48,18 @@ Namespace.prototype._create = function (namespace, path) {
  * @param {function(Object, Array<string>)} onUndefined
  * @return {{}}
  */
-Namespace.prototype._walk = function (namespace, onUndefined) {
+Namespace.prototype._walk = function (namespace, onUndefined)
+{
 	var name;
 	var path	= namespace.split('.');
 	var current = this._root;
 	
-	for (var i = 0; i < path.length; i++) {
+	for (var i = 0; i < path.length; i++)
+	{
 		name = path[i];
 
-		if (typeof current[name] === 'undefined') {
+		if (typeof current[name] === 'undefined')
+		{
 			return onUndefined(current, path.splice(i));
 		}
 
@@ -81,7 +73,8 @@ Namespace.prototype._walk = function (namespace, onUndefined) {
 /**
  * @return {{}}
  */
-Namespace.prototype.root = function () {
+Namespace.prototype.root = function ()
+{
 	return this._root;
 };
 
@@ -89,8 +82,10 @@ Namespace.prototype.root = function () {
  * @param {string} namespace
  * @return {{}}
  */
-Namespace.prototype.get = function (namespace) {
-	if (typeof namespace === 'undefined' || namespace === '') {
+Namespace.prototype.get = function (namespace)
+{
+	if (typeof namespace === 'undefined' || namespace === '')
+	{
 		return this._root;
 	}
 	
@@ -101,20 +96,38 @@ Namespace.prototype.get = function (namespace) {
  * @param {string} namespace
  * @param {function()=} scope
  */
-Namespace.prototype.namespace = function (namespace, scope) {
+Namespace.prototype.namespace = function (namespace, scope)
+{
 	var namespaceObject = this.get(namespace);
 	
-	if (scope) { 
-		scope.call(namespaceObject, this._container);
+	if (scope)
+	{ 
+		var res = scope.call(namespaceObject, this._root);
+		
+		if (typeof res !== 'undefined')
+		{
+			if (namespaceObject === this._root)
+			{
+				throw new Error('Can not set the value of a root namespace!');
+			}
+			else
+			{
+				
+			}
+		}
 	}
+	
+	return namespaceObject;
 };
 
 /**
  * @param {string} namespace
  * @return {boolean}
  */
-Namespace.prototype.isSet = function (namespace) {
-	if (typeof namespace === 'undefined' || namespace === '') {
+Namespace.prototype.isSet = function (namespace)
+{
+	if (typeof namespace === 'undefined' || namespace === '')
+	{
 		return true;
 	}
 	
@@ -124,7 +137,8 @@ Namespace.prototype.isSet = function (namespace) {
 /**
  * @return {function(string, function()=)} Returns the namespace method binded to this object. 
  */
-Namespace.prototype.getCreator = function() {
+Namespace.prototype.getCreator = function()
+{
 	return this.namespace.bind(this);
 };
 

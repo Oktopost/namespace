@@ -1,8 +1,8 @@
 'use strict';
 
 
-const ResolverCreatorFactory = require('../../../src/NamespaceLoader/Path/ResolverCreatorFactory');
-const configParser = require('../../../src/NamespaceLoader/configParser');
+const ResolverCreatorFactory = require('../../../src/DynamicLoading/Path/ResolverCreatorFactory');
+const configParser = require('../../../src/DynamicLoading/configParser');
 const assert = require('chai').assert;
 
 

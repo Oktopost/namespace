@@ -51,21 +51,6 @@ suite('Namespace', () => {
 			
 			assert.notEqual(obj1, obj2);
 		});
-		
-		test('No default object passed to namespace, window scope used', () => {
-			global.window = {};
-			
-			var n = new Namespace();
-			
-			try {
-				n.namespace('a.b', function(container) {
-					assert.equal(global.window, container);
-				});
-			} catch (e) {
-				delete global.window;
-				throw e;
-			}
-		});
 	});
 	
 	

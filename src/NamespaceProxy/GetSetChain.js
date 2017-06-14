@@ -18,7 +18,7 @@ function GetSetChain(initial)
 
 
 /**
- * @param {function|{}} data
+ * @param {function|*} data
  * @param {function=} set
  */
 GetSetChain.prototype.add = function (data, set)

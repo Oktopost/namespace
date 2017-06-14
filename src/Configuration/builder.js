@@ -3,7 +3,7 @@
 
 const configSearch				= require('./configSearch');
 const ApplicationConfigFile		= require('./ApplicationConfigFile');
-const ResolverCreatorFactory	= require('../NamespaceLoader/Path/ResolverCreatorFactory');
+const ResolverCreatorFactory	= require('../DynamicLoading/Path/ResolverCreatorFactory');
 
 
 const path = require('path');

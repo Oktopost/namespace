@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Loader = require('../../../src/NamespaceLoader/Loader');
+const Loader = require('../../../src/DynamicLoading/Loader');
 const assert = require('chai').assert;
 
 

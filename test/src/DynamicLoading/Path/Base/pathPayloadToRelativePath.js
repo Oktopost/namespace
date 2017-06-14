@@ -1,7 +1,7 @@
 'use strict';
 
 
-const pathPayloadToRelativePath = require('../../../../../src/NamespaceLoader/Path/Base/pathPayloadToRelativePath');
+const pathPayloadToRelativePath = require('../../../../../src/DynamicLoading/Path/Base/pathPayloadToRelativePath');
 const assert = require('chai').assert;
 
 const path = require('path');
