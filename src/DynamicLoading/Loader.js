@@ -48,7 +48,7 @@ Loader.prototype.resolve = function (namespace)
  */
 Loader.prototype._resolveToFullPath = function (p)
 {
-	if (p.substr(0, 2) === './')
+	if (p !== null && p.substr(0, 2) === './')
 	{
 		p = path.dirname(require.main.filename) + '/' + p.substr(2);
 	}

@@ -91,7 +91,7 @@ suite('Loader', () =>
 			
 			loader.add({ 'a': () => {} });
 			
-			assert.equal(null, loader.tryResolve('abc'));
+			assert.equal(null, loader.tryResolve('nfg'));
 		});
 		
 		test('loader found, loader called', () =>
