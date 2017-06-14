@@ -77,7 +77,7 @@ Loader.prototype.tryResolve = function (namespace)
 			attr.length <= bestMatch ||
 				
 			// Check if namespace matches prefix.
-			attr.length >= namespace.length || 
+			attr.length > namespace.length || 
 			namespace.substr(0, attr.length) !== attr) 
 		{
 			continue;

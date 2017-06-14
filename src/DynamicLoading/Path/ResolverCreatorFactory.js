@@ -2,6 +2,7 @@
 
 
 const partialCreator			= require('./Partial/partialCreator');
+const filePathCreator			= require('./File/filePathCreator');
 const directoryResolveCreator	= require('./Directory/directoryResolveCreator');
 
 const pathPayloadToRelativePath	= require('./Base/pathPayloadToRelativePath');
@@ -10,13 +11,15 @@ const pathPayloadToRelativePath	= require('./Base/pathPayloadToRelativePath');
 const INITIAL_MAP = {
 	dir:		directoryResolveCreator,
 	directory:	directoryResolveCreator,
-	partial:	partialCreator
+	partial:	partialCreator,
+	file:		filePathCreator
 };
 
 const INITIAL_PATH_CALLBACKS = {
 	dir:		pathPayloadToRelativePath,
 	directory:	pathPayloadToRelativePath,
-	partial:	pathPayloadToRelativePath
+	partial:	pathPayloadToRelativePath,
+	file:		pathPayloadToRelativePath,
 };
 
 

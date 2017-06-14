@@ -143,6 +143,17 @@ suite('Loader', () =>
 			
 			assert.equal('c', loader.tryResolve('abcdef'));
 		});
+		
+		test('length matches namespace length', () =>
+		{
+			var loader = new Loader();
+			
+			loader.add({
+				'a.b.c': () => { return 'a'; }
+			});
+			
+			assert.equal('a', loader.tryResolve('a.b.c'));
+		});
 	});
 	
 	suite('resolve', () =>

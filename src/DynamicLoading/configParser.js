@@ -21,7 +21,6 @@ function _parseCreator(creator, config, result)
 }
 
 /**
- * 
  * @param {{}} config
  * @param {ResolverCreatorFactory=} factory
  * @return {{}}
