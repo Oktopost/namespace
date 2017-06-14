@@ -30,35 +30,83 @@ function invokeCallback(namespace, callback)
 }
 
 
+/**
+ * @param {string|function=} a
+ * @param {function=} b
+ */
+function resolveParameters(a, b)
+{
+	if (typeof a === 'string')
+	{
+		Root.set(a);
+		return (typeof b === 'function' ? b : undefined);
+	}
+	else if (typeof a === 'function')
+	{
+		return a;
+	}
+}
+
+
 const INDEX = {
 
 	/**
 	 * @param {string} dir
-	 * @return {{in: INDEX.in, dynamic: INDEX.dynamic, static: INDEX.static, getDependencies: INDEX.getDependencies, setupDynamic: INDEX.setupDynamic}}
+	 * @return {self}
 	 */
 	in: function (dir)
 	{
 		Root.set(dir);
-		return INDEX; 
+		return this; 
 	},
-	
-	dynamic: function (callback)
+
+	/**
+	 * @param {string|function=} a
+	 * @param {function=} b
+	 * @return {*}
+	 */
+	dynamic: function (a, b)
 	{
+		var callback = resolveParameters(a, b);
 		var namespace = buildDynamic(Initializers.defaultDynamicSetup);
 		return invokeCallback(namespace, callback);
 	},
 	
-	static: function (callback)
+	/**
+	 * @param {string|function=} a
+	 * @param {function=} b
+	 * @return {*}
+	 */
+	static: function (a, b)
 	{
+		var callback = resolveParameters(a, b);
 		var namespace = new Namespace();
+		
 		global.namespace = namespace.getCreator();
+		
 		return invokeCallback(namespace, callback)
 	},
-	
-	getDependencies: function (setup, callback)
+
+	/**
+	 * @param {string|function} path If functio passed, it's treated as the setup function.
+	 * @param {function} setup
+	 * @param {function=} callback
+	 * @return {*}
+	 */
+	getDependencies: function (path, setup, callback)
 	{
 		var dep = new DependencyLogger(); 
 		var object = new Dependencies(dep);
+		
+		if (typeof path === 'function')
+		{
+			setup = path;
+			callback = setup;
+		}
+		else
+		{
+			Root.set(path);
+		}
 		
 		var namespace = buildDynamic(
 			Initializers.defaultDynamicSetup,
@@ -70,9 +118,25 @@ const INDEX = {
 		
 		return namespace.root();
 	},
-	
-	setupDynamic: function (setup, callback)
+
+	/**
+	 * @param {string|function} path If functio passed, it's treated as the setup function.
+	 * @param {function} setup
+	 * @param {function=} callback
+	 * @return {*}
+	 */
+	setupDynamic: function (path, setup, callback)
 	{
+		if (typeof path === 'function')
+		{
+			setup = path;
+			callback = setup;
+		}
+		else
+		{
+			Root.set(path);
+		}
+		
 		var namespace = buildDynamic(
 			Initializers.defaultDynamicSetup,
 			setup
@@ -81,5 +145,9 @@ const INDEX = {
 		return invokeCallback(namespace, callback);
 	}
 };
+
+
+INDEX.in = INDEX.in.bind(this);
+
 
 module.exports = INDEX;
