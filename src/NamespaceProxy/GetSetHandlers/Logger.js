@@ -10,7 +10,15 @@ const Logger = {
 	 */
 	get: function (cursor, name, callback)
 	{
-		console.log('Get called in ' + cursor.fullName + ' for ' + name);
+		if (cursor.fullName === '')
+		{
+			console.log('[NS GET] : global <' + name + '>');
+		}
+		else
+		{
+			console.log('[NS GET] : global.' + cursor.fullName + ' <' + name + '>');
+		}
+		
 		return callback();
 	},
 	
@@ -22,7 +30,7 @@ const Logger = {
 	 */
 	set: function (cursor, name, value, callback)
 	{
-		console.log('Set called in ' + cursor.fullName + ' for ' + name + ' value => ' + value);
+		console.log('[NS SET] : global.' + cursor.fullName + ' <' + name + '>' + ' = ' + value);
 		return callback();
 	}
 };

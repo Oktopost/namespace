@@ -13,7 +13,8 @@ function GetSetChain(initial)
 	this._getChain = new ChainCall();
 	this._setChain = new ChainCall();
 	
-	this.add(initial);
+	if (typeof initial !== 'undefined')
+		this.add(initial);
 }
 
 
@@ -23,7 +24,14 @@ function GetSetChain(initial)
  */
 GetSetChain.prototype.add = function (data, set)
 {
-	if (data instanceof Function || data instanceof Array)
+	if (data instanceof Array)
+	{
+		for (var i = data.length - 1; i >= 0; i--)
+		{
+			this.add(data[i]);
+		}
+	}
+	else if (data instanceof Function )
 	{
 		this._getChain.add(data);
 	}

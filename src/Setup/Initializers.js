@@ -16,7 +16,7 @@ const Initializers = {
 	proxyHandler: (chain) => 
 	{
 		return Promise.resolve().
-			then(() => chain.add(new ProxyCreator(chain)));
+			then(() => { chain.add(new ProxyCreator(chain)) });
 	},
 	
 	/**
@@ -34,9 +34,9 @@ const Initializers = {
 	 */
 	defaultDynamicSetup: (chain) => 
 	{
-		return Initializers.proxyHandler(chain)
+		return Initializers.loader(chain)
 			.then(() => {
-				return Initializers.loader(chain);
+				return Initializers.proxyHandler(chain);
 			});
 	}
 };

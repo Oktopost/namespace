@@ -6,7 +6,7 @@
  */
 function DependencyLogger()
 {
-	this._current 		= undefined;
+	this._current 		= '';
 	this._stuck			= [];
 	this._dependencies	= [];
 }
@@ -19,8 +19,8 @@ function DependencyLogger()
  */
 DependencyLogger.prototype.get = function (cursor, name, callback)
 {
-	this._current = cursor.getFullPathForChild(name);
 	this._stuck.push(this._current);
+	this._current = cursor.getFullPathForChild(name);
 	
 	try
 	{
@@ -28,7 +28,7 @@ DependencyLogger.prototype.get = function (cursor, name, callback)
 	}
 	finally 
 	{
-		this._stuck.pop(); 
+		this._current = this._stuck.pop();
 	}
 };
 
@@ -46,7 +46,12 @@ DependencyLogger.prototype.set = function (cursor, name, value, callback)
 		this._dependencies[this._current] = [];
 	}
 	
-	this._dependencies[this._current].push(cursor.getFullPathForChild(name))
+	var fullName = cursor.getFullPathForChild(name);
+	
+	if (fullName !== this._current)
+	{
+		this._dependencies[this._current].push(cursor.getFullPathForChild(name));
+	}
 	
 	return callback();
 };

@@ -35,3 +35,6 @@ ProxyCreator.prototype.get = function (cursor, name, callback)
 
 	return val;
 };
+
+
+module.exports = ProxyCreator;

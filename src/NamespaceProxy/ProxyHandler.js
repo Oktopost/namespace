@@ -33,10 +33,10 @@ ProxyHandler.prototype._get = function (target, name)
 	{
 		var res = this._getter(this._cursor, name);
 		
-		if (typeof res === 'undefined')
-			return;
-		
-		target[name] = res;
+		if (typeof target[name] === 'undefined' && typeof res !== 'undefined')
+		{
+			target[name] = res;
+		}
 	}
 	
 	return target[name]; 

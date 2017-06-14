@@ -14,13 +14,15 @@ const GetFromLoader	= require('../../NamespaceProxy/GetSetHandlers/GetFromLoader
  */
 function loaderInitializer(chain)
 {
-	var config	= loadConfig();
-	var map		= config.map || {};
-	var loader	= new Loader();
-	
-	loader.add(configParser(map));
-	
-	chain.add(new GetFromLoader(loader));
+	return loadConfig().then((config) => 
+	{
+		var map		= config.map || {};
+		var loader	= new Loader();
+		
+		loader.add(configParser(map));
+		
+		chain.add(new GetFromLoader(loader));
+	});
 }
 
 
