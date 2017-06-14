@@ -11,6 +11,7 @@ function DependencyLogger()
 	this._depsStack		= [];
 	this._stack			= [];
 	this._dependencies	= {};
+	this._all			= {};
 }
 
 
@@ -21,6 +22,13 @@ function DependencyLogger()
  */
 DependencyLogger.prototype.get = function (cursor, name, callback)
 {
+	var fullName = cursor.getFullPathForChild(name);
+	
+	if (typeof this._all[fullName] !== 'undefined')
+	{
+		this._currentStack.push(fullName);
+	}
+	
 	this._stack.push(this._current);
 	this._depsStack.push(this._currentStack);
 	
@@ -41,6 +49,8 @@ DependencyLogger.prototype.set = function (cursor, name, value, callback)
 	callback();
 	
 	var fullName = cursor.getFullPathForChild(name);
+	
+	this._all[fullName] = true;
 	
 	while (this._current !== fullName)
 	{
