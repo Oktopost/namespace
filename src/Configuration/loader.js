@@ -25,7 +25,7 @@ function loader(root)
 		config = builder(root);
 	}
 	
-	return Promise.resolve(config);
+	return config;
 }
 
 

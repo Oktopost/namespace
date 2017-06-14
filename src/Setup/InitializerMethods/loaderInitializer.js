@@ -10,19 +10,16 @@ const GetFromLoader	= require('../../NamespaceProxy/GetSetHandlers/GetFromLoader
 
 /**
  * @param {GetSetChain} chain
- * @return {Promise}
  */
 function loaderInitializer(chain)
 {
-	return loadConfig().then((config) => 
-	{
-		var map		= config.map || {};
-		var loader	= new Loader();
-		
-		loader.add(configParser(map));
-		
-		chain.add(new GetFromLoader(loader));
-	});
+	var config	= loadConfig();
+	var map		= config.map || {};
+	var loader	= new Loader();
+	
+	loader.add(configParser(map));
+	
+	chain.add(new GetFromLoader(loader));
 }
 
 

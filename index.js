@@ -13,7 +13,6 @@ const Dependencies = require('./src/Build/Dependencies');
 /**
  * @param {Namespace} namespace
  * @param callback
- * @return {Promise.<Namespace>}
  */
 function invokeCallback(namespace, callback)
 {
@@ -26,7 +25,7 @@ function invokeCallback(namespace, callback)
 		require(callback);
 	}
 	
-	return Promise.resolve(namespace);
+	return namespace;
 }
 
 
@@ -34,8 +33,8 @@ module.exports = {
 	
 	dynamic: function (callback)
 	{
-		return buildDynamic(Initializers.defaultDynamicSetup)
-			.then((namespace) => invokeCallback(namespace, callback));
+		var namespace = buildDynamic(Initializers.defaultDynamicSetup);
+		invokeCallback(namespace, callback);
 	},
 	
 	static: function (callback)
@@ -50,23 +49,22 @@ module.exports = {
 		var dep = new DependencyLogger(); 
 		var object = new Dependencies(dep);
 		
-		return buildDynamic(
-				Initializers.defaultDynamicSetup,
-				(chain) => { chain.add(dep) },
-				setup
-			)
-			.then((namespace) => 
-			{
-				callback(object, namespace);
-			});
+		var namespace = buildDynamic(
+			Initializers.defaultDynamicSetup,
+			(chain) => { chain.add(dep) },
+			setup
+		);
+			
+		callback(object, namespace);
 	},
 	
 	setupDynamic: function (setup, callback)
 	{
-		return buildDynamic(
-				Initializers.defaultDynamicSetup,
-				setup
-			)
-			.then((namespace) => invokeCallback(namespace, callback));
+		var namespace = buildDynamic(
+			Initializers.defaultDynamicSetup,
+			setup
+		);
+		
+		invokeCallback(namespace, callback);
 	}
 };

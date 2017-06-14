@@ -8,7 +8,7 @@ const ProxyHandler	= require('../NamespaceProxy/ProxyHandler');
 
 
 /**
- * @return {Promise.<Namespace>}
+ * @return Namespace
  */
 function buildDynamic()
 {
@@ -16,7 +16,6 @@ function buildDynamic()
 	var functions	= Array.prototype.slice.call(arguments);
 	var chain		= new GetSetChain();
 	var cursor		= Cursor.createRoot();
-	var promise		= Promise.resolve();
 	
 	var proxyHandler = new ProxyHandler(
 		cursor,
@@ -27,28 +26,16 @@ function buildDynamic()
 	
 	for (var i = 0; i < functions.length; i++)
 	{
-		promise = promise.then(
-			((index) =>
-			{
-				var res = functions[index](chain);
-				
-				if (res instanceof Promise)
-				{
-					return res.then(() => {});
-				}
-				else if (res instanceof Function) 
-				{
-					return Promise.resolve().then(() => { return res(); })
-				}
-			}).bind(null, i));
+		var res = functions[i](chain);
+			
+		if (res instanceof Function) 
+		{
+			res();
+		}
 	}
 	
-	return promise.then(
-		() => 
-		{
-			global.namespace = namespace.getCreator();
-			return namespace; 
-		}); 
+	global.namespace = namespace.getCreator();
+	return namespace;
 }
 
 
