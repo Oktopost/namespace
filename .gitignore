@@ -17,7 +17,7 @@
 npm-debug.log
 test.js
 test/all.browserify
-.namespace.json
+/.namespace.json
 
 
 # Build resources
