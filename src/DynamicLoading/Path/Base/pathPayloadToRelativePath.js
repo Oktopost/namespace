@@ -2,7 +2,7 @@
 
 
 const path = require('path');
-const ROOT_DIR = path.basename(global.INDEX_DIRECTORY || path.dirname(require.main.filename));
+const Root = require('../../../Setup/Root');
 
 
 function pathPayloadToRelativePath(dir, payload)
@@ -10,7 +10,7 @@ function pathPayloadToRelativePath(dir, payload)
 	if (typeof payload !== 'string')
 		throw Error('Unexpected configuration');
 	
-	if (ROOT_DIR === dir || payload[0] === '/')
+	if (Root.directory() === dir || payload[0] === '/')
 	{
 		return payload;
 	}

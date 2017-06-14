@@ -1,6 +1,7 @@
 'use strict';
 
 
+const Root						= require('../Setup/Root');
 const configSearch				= require('./configSearch');
 const ApplicationConfigFile		= require('./ApplicationConfigFile');
 const ResolverCreatorFactory	= require('../DynamicLoading/Path/ResolverCreatorFactory');
@@ -8,14 +9,11 @@ const ResolverCreatorFactory	= require('../DynamicLoading/Path/ResolverCreatorFa
 
 const path = require('path');
 
-const ROOT_PATH = global.INDEX_DIRECTORY || path.dirname(require.main.filename);
-const ROOT_DIR	= path.basename(ROOT_PATH);
-
 
 function _combineLoader(configLoaders, module, type, localLoaders)
 {
 	var key;
-	var resolve = (module === ROOT_DIR ? 
+	var resolve = (module === Root.directory() ? 
 		(a, b) => b : 
 		ResolverCreatorFactory.getPathResolveCallback(type));
 	
@@ -84,7 +82,7 @@ function builder(root)
 	var file;
 	var config = { map: {} };
 	
-	root = root || ROOT_PATH;
+	root = root || Root.path();
 	file = new ApplicationConfigFile(root);
 	
 	configSearch(root, 

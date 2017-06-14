@@ -1,21 +1,17 @@
 'use strict';
 
 
-const path 						= require('path');
-
+const Root						= require('../Setup/Root');
 const ApplicationConfigFile		= require('./ApplicationConfigFile');
 const builder					= require('./builder');
 	
-
-const ROOT_PATH	= global.INDEX_DIRECTORY || path.dirname(require.main.filename);
-
 
 function loader(root)
 {
 	var file;
 	var config;
 	
-	root = root || ROOT_PATH;
+	root = root || Root.path();
 	file = new ApplicationConfigFile(root);
 	
 	config = file.load();
