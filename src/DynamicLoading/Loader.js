@@ -50,7 +50,7 @@ Loader.prototype._resolveToFullPath = function (p)
 {
 	if (p !== null && p.substr(0, 2) === './')
 	{
-		p = path.dirname(require.main.filename) + '/' + p.substr(2);
+		p = (global.INDEX_DIRECTORY || path.dirname(require.main.filename)) + '/' + p.substr(2);
 	}
 	
 	return p;

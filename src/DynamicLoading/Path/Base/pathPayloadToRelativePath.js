@@ -2,7 +2,7 @@
 
 
 const path = require('path');
-const ROOT_DIR = path.basename(path.dirname(require.main.filename));
+const ROOT_DIR = path.basename(global.INDEX_DIRECTORY || path.dirname(require.main.filename));
 
 
 function pathPayloadToRelativePath(dir, payload)

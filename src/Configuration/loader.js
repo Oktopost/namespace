@@ -7,7 +7,7 @@ const ApplicationConfigFile		= require('./ApplicationConfigFile');
 const builder					= require('./builder');
 	
 
-const ROOT_PATH	= path.dirname(require.main.filename);
+const ROOT_PATH	= global.INDEX_DIRECTORY || path.dirname(require.main.filename);
 
 
 function loader(root)

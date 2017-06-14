@@ -8,8 +8,8 @@ const ResolverCreatorFactory	= require('../DynamicLoading/Path/ResolverCreatorFa
 
 const path = require('path');
 
-const ROOT_PATH = path.dirname(require.main.filename);
-const ROOT_DIR	= path.basename(path.dirname(require.main.filename));
+const ROOT_PATH = global.INDEX_DIRECTORY || path.dirname(require.main.filename);
+const ROOT_DIR	= path.basename(ROOT_PATH);
 
 
 function _combineLoader(configLoaders, module, type, localLoaders)
