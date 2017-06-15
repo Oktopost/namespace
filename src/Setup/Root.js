@@ -8,9 +8,15 @@ var rootPath = path.dirname(require.main.filename);
 
 
 const ROOT = {
+	_isSet: false,
+	
 	set: function (path) 
 	{
-		rootPath = path;
+		if (ROOT._isSet === false)
+		{
+			ROOT._isSet = true;
+			rootPath = path;
+		}
 	},
 	
 	path: function ()

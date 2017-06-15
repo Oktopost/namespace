@@ -11,21 +11,20 @@ const Initializers	= require('./src/Setup/Initializers');
 
 
 /**
- * @param {Namespace} namespace
  * @param callback
  */
-function invokeCallback(namespace, callback)
+function invokeCallback(callback)
 {
 	if (typeof callback === 'function')
 	{
-		callback(namespace);
+		callback(namespace());
 	}
 	else if (typeof callback === 'string')
 	{
 		require(callback);
 	}
 	
-	return namespace.root();
+	return namespace();
 }
 
 
@@ -44,6 +43,27 @@ function resolveParameters(a, b)
 	{
 		return a;
 	}
+}
+
+/**
+ * @return {boolean}
+ */
+function isDefined()
+{
+	return typeof global.namespace !== 'undefined';
+}
+
+/**
+ * @return {*}
+ */
+function callBuildDynamicOnce()
+{
+	if (!isDefined())
+	{
+		buildDynamic.apply(null, Array.prototype.slice.call(arguments));
+	}
+	
+	return namespace();
 }
 
 
@@ -67,17 +87,18 @@ const INDEX = {
 	dynamic: function (a, b)
 	{
 		var callback = resolveParameters(a, b);
-		var namespace = buildDynamic(Initializers.defaultDynamicSetup);
-		return invokeCallback(namespace, callback);
+		callBuildDynamicOnce(Initializers.defaultDynamicSetup);
+		return invokeCallback(callback);
 	},
 
 	/**
 	 * @param {string} p
+	 * @return {*} Namespace root object
 	 */
 	virtual: function (p)
 	{
 		Root.set(path.join(p, '../..'));
-		return buildDynamic(Initializers.defaultVirtualSetup).root();
+		return callBuildDynamicOnce(Initializers.defaultVirtualSetup);
 	},
 	
 	/**
@@ -88,11 +109,13 @@ const INDEX = {
 	static: function (a, b)
 	{
 		var callback = resolveParameters(a, b);
-		var namespace = new Namespace();
 		
-		global.namespace = namespace.getCreator();
+		if (!isDefined())
+		{
+			global.namespace = (new Namespace()).getCreator();
+		}
 		
-		return invokeCallback(namespace, callback)
+		return invokeCallback(callback)
 	},
 
 	/**
@@ -103,7 +126,11 @@ const INDEX = {
 	 */
 	getDependencies: function (p, setup, callback)
 	{
-		if (typeof p === 'function')
+		if (typeof global.namespace !== 'undefined')
+		{
+			throw new Error('Global namespace was already defined!');
+		}
+		else if (typeof p === 'function')
 		{
 			setup = p;
 			callback = setup;
@@ -116,12 +143,12 @@ const INDEX = {
 		var dependencySetup = Initializers.createDependencyLoggerSetup();
 		var logger = dependencySetup.dependenciesLogger;
 		
-		var namespace = buildDynamic(
+		buildDynamic(
 			dependencySetup,
 			setup
 		);
 			
-		callback(logger, namespace);
+		callback(logger, namespace());
 		
 		return (new Dependencies(logger)).getResolved();
 	},
@@ -144,12 +171,12 @@ const INDEX = {
 			Root.set(p);
 		}
 		
-		var namespace = buildDynamic(
+		callBuildDynamicOnce(
 			Initializers.defaultDynamicSetup,
 			setup
 		);
 		
-		return invokeCallback(namespace, callback);
+		return invokeCallback(callback);
 	}
 };
 
