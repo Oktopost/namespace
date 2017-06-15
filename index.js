@@ -153,9 +153,8 @@ const INDEX = {
 			setup
 		);
 			
-		callback(logger, namespace());
-		
-		return (new Dependencies(logger)).getResolved();
+		callback(namespace(), new Dependencies(logger));
+		return (new Dependencies(logger)).getResolvedToRoot();
 	},
 
 	/**

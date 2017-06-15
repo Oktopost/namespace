@@ -1,6 +1,6 @@
 {
   "name": "oktopost-namespace",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Namespace library for js",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Oktopost/spacename.git"
+    "url": "https://github.com/Oktopost/namespace.git"
   },
   "authors": [
     {
@@ -20,15 +20,11 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Oktopost/spacename/issues"
+    "url": "https://github.com/Oktopost/namespace/issues"
   },
-  "homepage": "https://github.com/Oktopost/spacename#readme",
+  "homepage": "https://github.com/Oktopost/namespace#readme",
   "devDependencies": {
     "chai": "^3.5.0",
-    "gulp": "^3.9.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-string-replace": "^0.3.1",
-    "gulp-wrap": "^0.13.0",
     "istanbul": "^0.4.5",
     "coveralls": "2.10.0",
     "mocha": "^3.2.0"
