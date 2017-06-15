@@ -4,29 +4,29 @@
 const path = require('path');
 
 
-var rootPath = path.dirname(require.main.filename);
-
-
 const ROOT = {
+	_rootPath: '',
 	_isSet: false,
+	
 	
 	set: function (path) 
 	{
 		if (ROOT._isSet === false)
 		{
 			ROOT._isSet = true;
-			rootPath = path;
+			ROOT._rootPath = path;
 		}
 	},
 	
 	path: function ()
 	{
-		return rootPath;
+		ROOT._rootPath = ROOT._rootPath || path.dirname(require.main.filename);
+		return ROOT._rootPath;
 	},
 	
 	directory: function ()
 	{
-		return path.basename(rootPath);
+		return path.basename(ROOT.path());
 	}
 };
 
