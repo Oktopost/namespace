@@ -97,7 +97,12 @@ const INDEX = {
 	 */
 	virtual: function (p)
 	{
-		Root.set(path.join(p, '../..'));
+		if (path.dirname(require.main.filename) !== p)
+		{
+			p = path.join(p, '../..');
+		}
+		
+		Root.set(p);
 		return callBuildDynamicOnce(Initializers.defaultVirtualSetup);
 	},
 	
