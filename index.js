@@ -3,8 +3,8 @@
 
 const path = require('path');
 
-const Namespace = require('./src/Namespace');
-
+const Namespace		= require('./src/Namespace');
+const Dependencies	= require('./src/Build/Dependencies');
 const Root			= require('./src/Setup/Root');
 const buildDynamic	= require('./src/Setup/buildDynamic');
 const Initializers	= require('./src/Setup/Initializers');
@@ -114,14 +114,16 @@ const INDEX = {
 		}
 		
 		var dependencySetup = Initializers.createDependencyLoggerSetup();
+		var logger = dependencySetup.dependenciesLogger;
+		
 		var namespace = buildDynamic(
 			dependencySetup,
 			setup
 		);
 			
-		callback(dependencySetup.dependenciesLogger, namespace);
+		callback(logger, namespace);
 		
-		return namespace.root();
+		return (new Dependencies(logger)).getResolved();
 	},
 
 	/**
