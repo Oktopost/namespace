@@ -76,14 +76,15 @@ function _combineMain(config, module, data)
 
 /**
  * @param {string=} root
+ * @param {boolean=false} isVirtual
  */
-function builder(root)
+function builder(root, isVirtual)
 {
 	var file;
 	var config = { map: {} };
 	
-	root = root || Root.path();
-	file = new ApplicationConfigFile(root);
+	isVirtual	= isVirtual || false;
+	root		= root || Root.path();
 	
 	configSearch(root, 
 		(module, data) => 
@@ -95,7 +96,11 @@ function builder(root)
 			console.error('Error when reading namespace.json in module ' + module + '. Skipping...', error);
 		});
 	
-	file.save(config);
+	if (!isVirtual)
+	{
+		file = new ApplicationConfigFile(root);
+		file.save(config);
+	}
 	
 	return config;
 }

@@ -8,7 +8,7 @@ const ProxyHandler	= require('../NamespaceProxy/ProxyHandler');
 
 
 /**
- * @return Namespace
+ * @return {Namespace}
  */
 function buildDynamic()
 {

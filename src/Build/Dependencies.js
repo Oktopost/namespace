@@ -4,6 +4,8 @@
 const SyncFS = require('./Crawl/SyncFS');
 const orderDependencies = require('./Order/orderDependencies');
 
+const Loader = require('../DynamicLoading/Loader');
+
 
 /**
  * @param {DependencyLogger} logger
@@ -21,6 +23,22 @@ function Dependencies(logger)
 Dependencies.prototype.get = function ()
 {
 	return orderDependencies(this._logger.getDependenciesMap());
+};
+
+/**
+ * @return {Array.<string>}
+ */
+Dependencies.prototype.getResolved = function ()
+{
+	var ordered = this.get();
+	var resolved = [];
+	
+	for (var i = 0; i < ordered.length; i++)
+	{
+		resolved.push(Loader.instance().resolve(ordered[i]));
+	}
+	
+	return resolved;
 };
 
 

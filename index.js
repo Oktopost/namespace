@@ -1,14 +1,13 @@
 'use strict';
 
 
+const path = require('path');
+
 const Namespace = require('./src/Namespace');
 
 const Root			= require('./src/Setup/Root');
 const buildDynamic	= require('./src/Setup/buildDynamic');
 const Initializers	= require('./src/Setup/Initializers');
-
-const DependencyLogger	= require('./src/NamespaceProxy/GetSetHandlers/DependencyLogger');
-const Dependencies		= require('./src/Build/Dependencies');
 
 
 /**
@@ -71,6 +70,15 @@ const INDEX = {
 		var namespace = buildDynamic(Initializers.defaultDynamicSetup);
 		return invokeCallback(namespace, callback);
 	},
+
+	/**
+	 * @param {string} p
+	 */
+	virtual: function (p)
+	{
+		Root.set(path.join(p, '../..'));
+		return buildDynamic(Initializers.defaultVirtualSetup).root();
+	},
 	
 	/**
 	 * @param {string|function=} a
@@ -88,53 +96,50 @@ const INDEX = {
 	},
 
 	/**
-	 * @param {string|function} path If functio passed, it's treated as the setup function.
+	 * @param {string|function} p If function passed, it's treated as the setup function.
 	 * @param {function} setup
 	 * @param {function=} callback
 	 * @return {*}
 	 */
-	getDependencies: function (path, setup, callback)
+	getDependencies: function (p, setup, callback)
 	{
-		var dep = new DependencyLogger(); 
-		var object = new Dependencies(dep);
-		
-		if (typeof path === 'function')
+		if (typeof p === 'function')
 		{
-			setup = path;
+			setup = p;
 			callback = setup;
 		}
 		else
 		{
-			Root.set(path);
+			Root.set(p);
 		}
 		
+		var dependencySetup = Initializers.createDependencyLoggerSetup();
 		var namespace = buildDynamic(
-			Initializers.defaultDynamicSetup,
-			(chain) => { chain.add(dep) },
+			dependencySetup,
 			setup
 		);
 			
-		callback(object, namespace);
+		callback(dependencySetup.dependenciesLogger, namespace);
 		
 		return namespace.root();
 	},
 
 	/**
-	 * @param {string|function} path If functio passed, it's treated as the setup function.
+	 * @param {string|function} p If functio passed, it's treated as the setup function.
 	 * @param {function} setup
 	 * @param {function=} callback
 	 * @return {*}
 	 */
-	setupDynamic: function (path, setup, callback)
+	setupDynamic: function (p, setup, callback)
 	{
-		if (typeof path === 'function')
+		if (typeof p === 'function')
 		{
-			setup = path;
+			setup = p;
 			callback = setup;
 		}
 		else
 		{
-			Root.set(path);
+			Root.set(p);
 		}
 		
 		var namespace = buildDynamic(
@@ -147,7 +152,7 @@ const INDEX = {
 };
 
 
-INDEX.in = INDEX.in.bind(this);
+INDEX.in = INDEX.in.bind(INDEX);
 
 
 module.exports = INDEX;

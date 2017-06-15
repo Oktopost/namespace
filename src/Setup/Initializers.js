@@ -5,6 +5,9 @@ const loaderInitializer = require('./InitializerMethods/loaderInitializer');
 
 const ProxyCreator = require('../NamespaceProxy/GetSetHandlers/ProxyCreator');
 
+const DependencyLogger	= require('../NamespaceProxy/GetSetHandlers/DependencyLogger');
+const Dependencies		= require('../Build/Dependencies');
+
 
 const Initializers = {
 	
@@ -19,11 +22,12 @@ const Initializers = {
 	
 	/**
 	 * @param {GetSetChain} chain
+	 * @param {boolean=false} isVirtual
 	 * @return {Promise}
 	 */
-	loader: (chain) => 
+	loader: (chain, isVirtual) => 
 	{
-		return loaderInitializer(chain);
+		return loaderInitializer(chain, isVirtual || false);
 	},
 	
 	/**
@@ -31,9 +35,37 @@ const Initializers = {
 	 */
 	defaultDynamicSetup: (chain) => 
 	{
-		Initializers.loader(chain);
+		Initializers.loader(chain, false);
 		Initializers.proxyHandler(chain);
-	}
+	},
+	
+	/**
+	 * @param {GetSetChain} chain
+	 */
+	defaultVirtualSetup: (chain) => 
+	{
+		Initializers.loader(chain, true);
+		Initializers.proxyHandler(chain);
+	},
+
+	/**
+	 * @return {callback}
+	 */
+	createDependencyLoggerSetup: () => 
+	{
+		var dep = new DependencyLogger(); 
+		var object = new Dependencies(dep);
+		
+		function callback (chain) 
+		{
+			Initializers.defaultVirtualSetup(chain);
+			chain.add(dep);
+		}
+		
+		callback.dependenciesLogger = dep;
+		
+		return callback;
+	},
 };
 
 

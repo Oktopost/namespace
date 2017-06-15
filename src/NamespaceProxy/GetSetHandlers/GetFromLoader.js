@@ -18,7 +18,7 @@ function GetFromLoader(loader)
  */
 GetFromLoader.prototype.get = function (cursor, name, callback)
 {
-	var fullName	= cursor.getFullPathForChild(name);
+	var fullName	= cursor.getFullName(name);
 	var res			= this._loader.tryGet(fullName);
 	
 	if (res === null)

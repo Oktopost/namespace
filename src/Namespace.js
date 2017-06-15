@@ -102,19 +102,7 @@ Namespace.prototype.namespace = function (namespace, scope)
 	
 	if (scope)
 	{ 
-		var res = scope.call(namespaceObject, this._root);
-		
-		if (typeof res !== 'undefined')
-		{
-			if (namespaceObject === this._root)
-			{
-				throw new Error('Can not set the value of a root namespace!');
-			}
-			else
-			{
-				
-			}
-		}
+		scope.call(namespaceObject, this._root);
 	}
 	
 	return namespaceObject;

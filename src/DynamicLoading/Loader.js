@@ -119,5 +119,16 @@ Loader.prototype.tryGet = function (namespace)
 	}
 };
 
+/**
+ * @return {Loader}
+ */
+Loader.instance = function ()
+{
+	if (typeof Loader._instance === 'undefined')
+		Loader._instance = new Loader();
+	
+	return Loader._instance 
+};
+
 
 module.exports = Loader;

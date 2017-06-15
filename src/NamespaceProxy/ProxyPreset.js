@@ -22,10 +22,7 @@ const ProxyPreset = {
 		
 		for (var key in PRESET)
 		{
-			if (PRESET.hasOwnProperty(key))
-			{
-				clone[key] = PRESET[key];
-			}
+			clone[key] = PRESET[key];
 		}
 		
 		return clone;

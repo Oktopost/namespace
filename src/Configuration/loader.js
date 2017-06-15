@@ -4,24 +4,32 @@
 const Root						= require('../Setup/Root');
 const ApplicationConfigFile		= require('./ApplicationConfigFile');
 const builder					= require('./builder');
-	
 
-function loader(root)
+
+/**
+ * @param root
+ * @param {boolean=false} isVirtual
+ * @return {{}|null|*}
+ */
+function loader(root, isVirtual)
 {
 	var file;
 	var config;
 	
-	root = root || Root.path();
-	file = new ApplicationConfigFile(root);
-	
-	config = file.load();
-	
-	if (config === null)
+	if (isVirtual !== true)
 	{
-		config = builder(root);
+		root = root || Root.path();
+		file = new ApplicationConfigFile(root);
+	
+		config = file.load();
+		
+		if (config === null)
+		{
+			config = builder(root);
+		}
 	}
 	
-	return config;
+	return config || builder(root, isVirtual);
 }
 
 
