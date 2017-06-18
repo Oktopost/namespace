@@ -6,7 +6,7 @@
 The **oktopost-namespace** library aims to implement the usage of Namespaces inside JavaScript projects. 
 
 
-## Table Of Content
+## Table Of Contents
 
   * [Installation](#installation)
   * [Basic Example](#basic-example)
@@ -22,7 +22,7 @@ npm install oktopost-namespace --save
 
 ## Basic Example
 
-The following example will assumes the next directory structure:
+The following example will assume the next directory structure:
 
 ```
 src
@@ -66,7 +66,7 @@ namespace('Example.Subdir', function ()
 
 **./src/Example/calc.js**
 
-> Define a new function names `calc` inside the namespace `Example`
+> Define a new function named `calc` inside the namespace `Example`
 
 ```js
 namespace('Example', function () 
@@ -128,7 +128,7 @@ let result = require('oktopost-namespace').getDependencies(
 	});
 ```
 
-The `result` variable will be equal to an array of file names ordered by there *dependency priority*. Starting from the
+The `result` variable will be equal to an array of file names ordered by thier *dependency priority*. Starting from the
 files that have no depends at all, and all the way to the enrty-point file of the project - that depends on all
 other library files. 
 
@@ -141,7 +141,7 @@ In this case `result` it will be equal to:
 ]
 ```
 
-If you project depends on any other files from different libraries, they will also be included inside this array.
+If your project depends on any other files from different libraries, they will also be included inside this array.
 For example: 
 
 ```js
