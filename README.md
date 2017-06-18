@@ -10,7 +10,7 @@ The **oktopost-namespace** library aims to implement the usage of Namespaces ins
 
   * [Installation](#installation)
   * [Basic Example](#basic-example)
-  * [Building With Gulp Example](#bilding-with-gulp-example)
+  * [Building With Gulp Example](#building-with-gulp-example)
   * [More To Read](#more-to-read)
 
 
