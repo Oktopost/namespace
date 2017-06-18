@@ -69,7 +69,7 @@ namespace('Example.Subdir', function ()
 > Define a new function names `calc` inside the namespace `Example`
 
 ```js
-namespace('Example.Subdir', function () 
+namespace('Example', function () 
 {
 	this.sum = function sum(a, b)
 	{
@@ -78,7 +78,7 @@ namespace('Example.Subdir', function ()
 });
 ```
 
-**./src/namespace.json**
+**./namespace.json**
 
 > `namespace.json` is the configuration file for the Namespace library.
 
@@ -95,7 +95,7 @@ namespace('Example.Subdir', function ()
 ```
 
 
-**./src/index.js**
+**./index.js**
 
 > Load and setup the Namespace library. After calling the method `virtual`, the function `namespace` is registered into 
 > the global scope and can be called using `global.namesapce(...)` or just `namespace(...)`.
@@ -105,12 +105,13 @@ var root = require('oktopost-namespace').virtual(__dirname);
 module.exports = root.Example;
 ```
 
-All initialization methods including `virtual` will return the root object in which  all the namespaces are stored.
+Most initialization methods, including `virtual`, will return the root object in which all the namespaces are stored.
 
 
 Few notes:
-* Directory name must match the namespace name.
-* In the current version, `this` should not be assigned a value more then once per file.
+* Directory names should match the namespace path.
+* In the current version, `this` should not introduce more then one new definition per file into the namespaces scope.
+Or in other words, don't use `this.something = something;` more then once in the same JavaScript file.
 
 
 ## Building With Gulp Example
@@ -155,7 +156,7 @@ For example:
 * `path` must be the full directory path to `index.js` file.
 * `setupCallback` this function is called before resolving dependencies. You can leave it empty for most cases.
 * `initCallback` is a function that is used to load all dependencies. In most cases this can be done by loading the 
-entry-point object of our library. In this case it's the `calc` function.
+entry-point object of your library. In this case it's the `calc` function.
 
 
 ## More To Read
