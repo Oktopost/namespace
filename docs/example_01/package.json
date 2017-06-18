@@ -1,0 +1,17 @@
+{
+  "name": "oktopost-namespace-example",
+  "version": "1.0.0",
+  "description": "oktopost-namespace example",
+  "main": "index.js",
+  "authors": [
+    {
+      "name": "Alexey Puchkov",
+      "email": "alexey.pkv@gmail.com",
+      "url": "http://www.oktopost.com/"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "oktopost-namespace": "^2.0.0"
+  }
+}

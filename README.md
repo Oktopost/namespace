@@ -1,185 +1,171 @@
 # oktopost-namespace 
 
-Small library to easily create and manage namespaces in javascript.
-
-[![npm version](https://badge.fury.io/js/oktopost-namespace.svg?5)](https://badge.fury.io/js/oktopost-namespace)
+[![npm version](https://img.shields.io/npm/v/oktopost-namespace.svg)](https://www.npmjs.com/package/oktopost-namespace)
 [![Build Status](https://travis-ci.org/Oktopost/namespace.svg?branch=master)](https://travis-ci.org/Oktopost/namespace)
-[![Coverage Status](https://coveralls.io/repos/github/Oktopost/namespace/badge.svg?branch=master&1)](https://coveralls.io/github/Oktopost/namespace?branch=master&1)
+
+The **oktopost-namespace** library aims to implement the usage of Namespaces inside JavaScript projects. 
+
 
 ## Table Of Content
 
   * [Installation](#installation)
-    * [bower](#bower)
-    * [npm](#npm)
-  * [Usage](#usage)
-    * [Creation](#creating-a-new-namespace-object)
-    * [Accessing](#accessing-existing-namespaces)
-    * [Methods](#methods)
-        * [isSet](#isset)
-        * [get](#get)
-        * [namespace](#namespace)
-        * [getCreator](#getcreator)
-  * [Web Example](#web-example)
+  * [Basic Example](#basic-example)
+  * [Building With Gulp Example](#bilding-with-gulp-example)
+  * [More To Read](#more-to-read)
 
 
 ## Installation
 
-### bower
-```bash
-bower install oktopost-namespace
-```
-
-### npm
 ```bash
 npm install oktopost-namespace --save
 ```
 
-## Usage
+## Basic Example
 
-For web, Namespace is register in the window scope, and defined globally.
+The following example will assumes the next directory structure:
 
-For node use require
-
-```js
-const Namespace = require('oktopost-namespace').Namespace;
+```
+src
+  Example
+    Subdir
+      sub.js
+      sum.js
+    calc.js
+namespace.json
+index.js
 ```
 
-### Creating a new namespace object
 
+**./src/Example/Subdir/sub.js**
+
+> Define a new function named `sub` inside the namespace `Example.Subdir`
+ 
 ```js
-var myNamespace = new Namespace({});
-```
-
-First parameter of the Namespace constructor, is the **root** object that will hold the namespace.
-If no parameter passed, this **root** is set to the *global* scope (*window* for web). All created 
-namespaces are store inside the **root** object.
-
-```js
-var obj = {};
-var myNamespace = new Namespace(obj);
-myNamespace.namespace('a.b');
-
-console.log(obj); // Will print { a: { b: {} } }
-
-
-var GlobalNamespace = new Namespace();
-GlobalNamespace.namespace('a.b');
-
-console.log(window.a); // Will print { b: {} }
-```
-
-### Accessing existing namespaces
-To access a created namespace, retrieve it from the root object.
-
-```js
-var myNamespace = new Namespace();
-myNamespace.namespace('a.b');
-
-var A_B = window.a.b;
-```
-
-### Methods
-
-#### isSet
-```isSet(string path)```
-
-Return true if given path exists inside the namespace.
-
-```js
-myNamespace.namespace('a.b');
-
-console.log(myNamespace.isSet('a.b')); // true
-console.log(myNamespace.isSet('a.c')); // false
-```
-
-#### get
-``` get(string path)```
-
-Get a namespace by path. If part of the path does not exists, it will be created.
-
-```js
-var A_B = myNamespace.get('a.b');
-```
-
-#### namespace
-``` namespace(string path, [function({} root) callback])```
-
-Create a new namespace. If callback passed, it will be invoked in the following way:
-* **this** - will be set to the newly created namespace according to the *path* parameter
-* **root parameter** - will be set to the root object passed to Namespace constructor.
-
-```js
-var myNamespace = new Namespace();
-
-myNamespace.namespace('a.b', function(root) {
-    console.log(this); // Will print window.a.b object.
-    console.log(root); // Will print the root object passed to namespace. In this case window.
+namespace('Example.Subdir', function () 
+{
+	this.sub = function sub(a, b)
+	{
+		return a - b;
+	}
 });
 ```
 
-#### getCreator
-``` getCreator(): function(string path, [function({} root) callback])```
+**./src/Example/Subdir/sum.js**
 
-This method will return this.namespace.bind(this), which allows to use the namespace method 
-without referencing the original object.
+> Define a new function named `sum` inside the namespace `Example.Subdir`
 
 ```js
-var myNamespace = new Namespace();
-
-var namespaceWrong = myNamespace.namespace;
-
-// Will throw and exception because scope is window and not myNamespace
-namespaceWrong('a.b', function(root) {
-    // ...
-});
-
-
-var namespaceCorrect = myNamespace.getCreator();
-
-// Will work
-namespaceWrong('a.b', function(root) {
-    // ...
-});
-
-```
-
-## Web Example
-
-
-**public/js/boot.js**
-```js
-window.MyApp = new Namespace(window);
-
-// May help readability but should be used only in final applications and not libraries.
-window.namespace = MyApp.getCreator();
-```
-
-**public/js/lib/SomeClass.js**
-```js
-namespace('MyApp.lib', function() {
-    
-    /**
-     * @class MyApp.lib.SomeClass
-     */
-    this.SomeClass = function SomeClass(a) {
-        this._a = a;
-    };
-    
-    SomeClass.prototype.getA = function() {
-        return this._a;
-    };
+namespace('Example.Subdir', function () 
+{
+	this.sum = function sum(a, b)
+	{
+		return a + b;
+	}
 });
 ```
 
+**./src/Example/calc.js**
 
-**public/js/lib/UseSomeClass.js**
+> Define a new function names `calc` inside the namespace `Example`
+
 ```js
-namespace('MyApp.lib', function(root) {
-    
-    // var someClass = root.MyApp.lib.someClass; 
-    // var someClass = window.MyApp.lib.someClass;
-    var SomeClass = MyApp.lib.someClass; 
-    
-    var instance = new SomeClass(2);
+namespace('Example.Subdir', function () 
+{
+	this.sum = function sum(a, b)
+	{
+		return a + b;
+	}
 });
+```
+
+**./src/namespace.json**
+
+> `namespace.json` is the configuration file for the Namespace library.
+
+```json
+{
+	"map":
+	{
+		"dir":
+		{
+			"Example": "./src/"
+		}
+	}
+}
+```
+
+
+**./src/index.js**
+
+> Load and setup the Namespace library. After calling the method `virtual`, the function `namespace` is registered into 
+> the global scope and can be called using `global.namesapce(...)` or just `namespace(...)`.
+
+```js
+var root = require('oktopost-namespace').virtual(__dirname);
+module.exports = root.Example;
+```
+
+All initialization methods including `virtual` will return the root object in which  all the namespaces are stored.
+
+
+Few notes:
+* Directory name must match the namespace name.
+* In the current version, `this` should not be assigned a value more then once per file.
+
+
+## Building With Gulp Example
+
+Inside your `gulp.js` file, you can use the following snippet:
+
+```js
+let result = require('oktopost-namespace').getDependencies(
+	__dirname, 
+	() => {}, 
+	(root) =>
+	{
+		const calc = root.Example.calc;
+	});
+```
+
+The `result` variable will be equal to an array of file names ordered by there *dependency priority*. Starting from the
+files that have no depends at all, and all the way to the enrty-point file of the project - that depends on all
+other library files. 
+
+In this case `result` it will be equal to:
+```js
+[
+	'src/Example/Subdir/sub.js',
+	'src/Example/Subdir/sum.js',
+	'src/Example/calc.js'
+]
+```
+
+If you project depends on any other files from different libraries, they will also be included inside this array.
+For example: 
+
+```js
+[
+	'node_modules/my_lib/src/other_file.js',
+	'src/Example/calc.js'
+]
+```
+
+### The `getDependencies(path, setupCallback, initCallback)` method:
+
+* `path` must be the full directory path to `index.js` file.
+* `setupCallback` this function is called before resolving dependencies. You can leave it empty for most cases.
+* `initCallback` is a function that is used to load all dependencies. In most cases this can be done by loading the 
+entry-point object of our library. In this case it's the `calc` function.
+
+
+## More To Read
+
+For more generic example, see the content of **[docs/example_01](docs/example_01)**
+
+```ssh
+git clone git@github.com:Oktopost/namespace.git
+cd namespace/docs/example_01
+npm install
+node run_me.js
+node run_me_gulp.js
 ```
