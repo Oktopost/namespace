@@ -7,6 +7,9 @@ const assert = require('chai').assert;
 
 suite('Loader', () =>
 {
+	var utilsDir = __dirname + '/../../../test_utils';
+	
+	
 	suite('add', () =>
 	{
 		test('Empty map', () =>
@@ -186,11 +189,23 @@ suite('Loader', () =>
 			assert.equal(null, loader.tryGet('nnn'));
 		});
 		
+		test('Exception in required target, exception thrown', () => 
+		{
+			var loader = new Loader();
+			
+			loader.add({ 'a' : () => { return utilsDir + '/Loader_test/exceptionInFile' } });
+			
+			assert.throws(() =>
+			{
+				loader.tryGet('abc');
+			});
+		});
+		
 		test('Invalid require target, null returned', () => 
 		{
 			var loader = new Loader();
 			
-			loader.add({ 'a': () => { return __dirname + '/InvalidIncludePath'} });
+			loader.add({ 'a': () => { return utilsDir + '/InvalidIncludePath'} });
 			
 			assert.equal(null, loader.tryGet('abc'));
 		});
@@ -198,9 +213,9 @@ suite('Loader', () =>
 		test('Element found and valid, element required and returned', () => 
 		{
 			var loader = new Loader();
-			var object = require('./Loader_test/valid');
+			var object = require(utilsDir + '/Loader_test/valid');
 			
-			loader.add({ 'a': () => { return __dirname + '/Loader_test/valid'} });
+			loader.add({ 'a': () => { return utilsDir + '/Loader_test/valid'} });
 			
 			assert.equal(object, loader.tryGet('abc'));
 		});
@@ -219,7 +234,7 @@ suite('Loader', () =>
 		{
 			var loader = new Loader();
 			
-			loader.add({ 'a': () => { return __dirname + '/InvalidIncludePath'} });
+			loader.add({ 'a': () => { return utilsDir + '/InvalidIncludePath'} });
 			
 			assert.throws(() => { loader.get('abc'); });
 		});
@@ -227,9 +242,9 @@ suite('Loader', () =>
 		test('Element found and valid, element required and returned', () => 
 		{
 			var loader = new Loader();
-			var object = require('./Loader_test/valid');
+			var object = require(utilsDir + '/Loader_test/valid');
 			
-			loader.add({ 'a': () => { return __dirname + '/Loader_test/valid'} });
+			loader.add({ 'a': () => { return utilsDir + '/Loader_test/valid'} });
 			
 			assert.equal(object, loader.get('abc'));
 		});

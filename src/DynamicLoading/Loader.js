@@ -2,6 +2,7 @@
 
 
 const Root = require('../Setup/Root');
+const NamespaceCouldNotBeLoadedException = require('./NamespaceCouldNotBeLoadedException');
 
 
 function Loader()
@@ -36,7 +37,7 @@ Loader.prototype.resolve = function (namespace)
 	var res = this.tryResolve(namespace);
 	
 	if (res === null)
-		throw new Error('Could not load namespace ' + namespace);
+		throw new NamespaceCouldNotBeLoadedException(namespace);
 	
 	return res;
 };
@@ -115,7 +116,10 @@ Loader.prototype.tryGet = function (namespace)
 	}
 	catch (e) 
 	{
-		return null;
+		if (e instanceof NamespaceCouldNotBeLoadedException || e.code === 'MODULE_NOT_FOUND')
+			return null;
+		else 
+			throw e;
 	}
 };
 
