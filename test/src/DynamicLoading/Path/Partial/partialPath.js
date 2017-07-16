@@ -79,8 +79,6 @@ suite('partialPath', () =>
 		test('Namespace to short, error thrown', () => 
 		{
 			assert.throws(() => partialPath('prefix', '/', 'pref'));
-			assert.throws(() => partialPath('prefix', '/', 'prefix'));
-			assert.throws(() => partialPath('pre.fix', '/', 'pre.fix'));
 			assert.throws(() => partialPath('pre.fix', '/', 'pre.f'));
 		});
 		

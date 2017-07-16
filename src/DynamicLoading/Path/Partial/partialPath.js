@@ -14,7 +14,7 @@ module.exports = function partialPath(prefix, path, namespace)
 	if (prefix.length > 0)
 	{
 		if (namespace.substr(0, prefix.length) !== prefix || 
-			namespace.length <= prefix.length)
+			namespace.length < prefix.length)
 		{
 			throw new Error('The namespace ' + namespace + ' does not start with the prefix ' + prefix);
 		}
