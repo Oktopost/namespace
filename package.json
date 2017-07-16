@@ -1,6 +1,6 @@
 {
   "name": "oktopost-namespace",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Namespace library for js",
   "main": "index.js",
   "scripts": {
