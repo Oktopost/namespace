@@ -123,6 +123,11 @@ function orderDependencies(dependencies)
 		container.apply();
 	}
 	
+	if (Object.keys(dependencies).length !== 0)
+	{
+		throw new UnresolvedDependencyException(JSON.stringify(dependencies, null, 4)); 
+	}
+	
 	return container.getOrdered();
 }
 
