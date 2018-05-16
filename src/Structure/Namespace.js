@@ -1,7 +1,7 @@
 /**
- * @param {string=} fullName
- * @param {string=} name
- * @param {Namespace=} parent
+ * @param {string} fullName
+ * @param {string} name
+ * @param {Namespace=null} parent
  * @constructor
  */
 function Namespace(fullName, name, parent)
@@ -28,6 +28,15 @@ Namespace.prototype.fullName = function ()
 	return this._fullName;
 };
 
+Namespace.prototype.getFullMemberName = function (memberName)
+{
+	if (this._fullName)
+		return this._fullName + '.' + memberName;
+	else
+		return memberName;
+};
+
+
 Namespace.prototype.name = function ()
 {
 	return this._name;
@@ -35,7 +44,7 @@ Namespace.prototype.name = function ()
 
 Namespace.prototype.members = function ()
 {
-	return this._members;
+	return this._members.concat();
 };
 
 /**

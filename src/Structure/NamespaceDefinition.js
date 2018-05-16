@@ -5,10 +5,13 @@
  */
 function NamespaceDefinition(root, namespace)
 {
-	this._root		= root;
-	this._namespace = namespace;
-	this._file		= null;
-	this._members	= [];
+	this._root			= root;
+	this._namespace 	= namespace;
+	this._file			= null;
+	this._members		= [];
+	
+	this._dependencyNames	= {};
+	this._dependencies		= [];
 }
 
 
@@ -52,7 +55,7 @@ NamespaceDefinition.prototype.root = function ()
  */
 NamespaceDefinition.prototype.members = function ()
 {
-	return this._members;
+	return this._members.concat();
 };
 
 /**
@@ -67,6 +70,25 @@ NamespaceDefinition.prototype.createMember = function (name, value)
 	return member;
 };
 
+/**
+ * @param {NamespaceMember} dep
+ */
+NamespaceDefinition.prototype.addDependency = function (dep)
+{
+	if (typeof this._dependencyNames[dep.fullName()] === 'undefined')
+	{
+		this._dependencyNames[dep.fullName()] = true;
+		this._dependencies.push(dep);
+	}
+};
+
+/**
+ * @return {NamespaceMember[]}
+ */
+NamespaceDefinition.prototype.getDependencies = function ()
+{
+	return this._dependencies.concat();
+};
 
 
 module.exports = NamespaceDefinition;

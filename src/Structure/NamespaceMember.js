@@ -9,6 +9,7 @@ function NamespaceMember(def, name, value)
 	this._definition	= def;
 	this._name			= name;
 	this._value			= value;
+	this._fullName		= null;
 }
 
 
@@ -29,8 +30,13 @@ NamespaceMember.prototype.value = function ()
 
 NamespaceMember.prototype.fullName = function ()
 {
-	var path = this._definition.namespace().fullName();
-	return (path ? path + '.' + this._name : this._name);
+	if (this._fullName === null)
+	{
+		var path = this._definition.namespace().fullName();
+		this._fullName = (path ? path + '.' + this._name : this._name);
+	}
+	
+	return this._fullName;
 };
 
 
