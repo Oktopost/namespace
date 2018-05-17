@@ -8,16 +8,15 @@ const GenericPathProxy	= require('./GenericPathProxy');
  */
 function RootProxy(callbacks)
 {
-	GenericPathProxy.call(callbacks, null, '');
+	GenericPathProxy.call(this, callbacks, null, '');
 	
 	this._obj = {};
-	this._callbacks = callbacks;
 	
 	this._proxy = new Proxy(
 		this._obj,
 		{
-			set: this._onSet,
-			get: this._onGet
+			set: this._onSet.bind(this),
+			get: this._onGet.bind(this)
 		}
 	);
 }
@@ -40,17 +39,6 @@ RootProxy.prototype._getChildProxy = function (name)
 
 RootProxy.prototype.getProxyObject = function ()
 {
-	if (!this._proxy)
-	{
-		this._proxy = new Proxy(
-			this._obj,
-			{
-				set: this._onSet.bind(this),
-				get: this._onGet.bind(this)
-			}
-		)
-	}
-	
 	return this._proxy;
 };
 

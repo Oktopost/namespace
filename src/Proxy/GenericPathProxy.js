@@ -26,6 +26,8 @@ function GenericPathProxy(callbacks, parent, name)
  */
 GenericPathProxy.prototype._getParamsObject = function (name)
 {
+	name = name.toString();
+	
 	var fullName	= this.getFullNameTo(name);
 	var proxy		= this._getChildProxy(name);
 	
@@ -55,7 +57,10 @@ GenericPathProxy.prototype._getChildProxy = function (name)
  */
 GenericPathProxy.prototype._onGet = function (target, name)
 {
-	if (this._value	!== null)
+	// fuck js
+	if (typeof name === 'symbol' || name === 'inspect')
+		return undefined;
+	else if (this._children === null)
 		return this._value[name];
 	else if (typeof this._children[name] !== 'undefined')
 		return this._children[name];
@@ -63,7 +68,7 @@ GenericPathProxy.prototype._onGet = function (target, name)
 	var params = this._getParamsObject(name);
 	var result = this._callback.onGet(params);
 	
-	result = result || params.proxy;
+	result = result || params.proxy.getObject();
 	this._children[name] = result;
 	
 	return result;

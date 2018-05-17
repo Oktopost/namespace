@@ -20,7 +20,7 @@ PathProxy.prototype.constructor = PathProxy;
 PathProxy.prototype._invokeOnReference = function ()
 {
 	if (this._value === null) 
-		this.onReference(this);
+		this._callback.onReference(this);
 };
 
 PathProxy.prototype._getChildProxy = function (name)
@@ -59,18 +59,6 @@ PathProxy.prototype._onDeleteProperty = function(target, prop)
 	return delete this._value[prop];
 };
 
-PathProxy.prototype._onGetOwnPropertyDescriptor = function(target, prop)
-{
-	this._invokeOnReference();
-	return Reflect.getOwnPropertyDescriptor(this._value, prop);
-};
-
-PathProxy.prototype._onGetPrototypeOf = function()
-{
-	this._invokeOnReference();
-	return Reflect.getPrototypeOf(this._value);
-};
-
 PathProxy.prototype._onHas = function(target, key)
 {
 	this._invokeOnReference();
@@ -81,12 +69,6 @@ PathProxy.prototype._onIsExtensible = function()
 {
 	this._invokeOnReference();
 	return Reflect.isExtensible(this._value);
-};
-
-PathProxy.prototype._onOwnKeys = function(target)
-{
-	this._invokeOnReference();
-	return Reflect.ownKeys(this._value);
 };
 
 PathProxy.prototype._onPreventExtensions = function()
@@ -128,11 +110,8 @@ PathProxy.prototype.getObject = function ()
 				construct:					this._onConstruct.bind(this),
 				defineProperty:				this._onDefineProperty.bind(this),
 				deleteProperty:				this._onDeleteProperty.bind(this),
-				getOwnPropertyDescriptor:	this._onGetOwnPropertyDescriptor.bind(this),
-				getPrototypeOf:				this._onGetPrototypeOf.bind(this),
 				has:						this._onHas.bind(this),
 				isExtensible:				this._onIsExtensible.bind(this),
-				ownKeys:					this._onOwnKeys.bind(this),
 				preventExtensions:			this._onPreventExtensions.bind(this),
 				setPrototypeOf:				this._onSetPrototypeOf.bind(this)
 			}
