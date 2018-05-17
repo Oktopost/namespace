@@ -1,7 +1,4 @@
-const DefinitionsCollection = require('./Runtime/DefinitionsCollection');
-
-
-function RuntimeDefinition()
+function CallbackStuck()
 {
 	this._isInitialized = false;
 	this._lastNamespace = null;
@@ -16,7 +13,7 @@ function RuntimeDefinition()
 }
 
 
-RuntimeDefinition.prototype._getNamespaceFunction = function ()
+CallbackStuck.prototype._getNamespaceFunction = function ()
 {
 	var self = this;
 	
@@ -36,10 +33,10 @@ RuntimeDefinition.prototype._getNamespaceFunction = function ()
 };
 
 
-RuntimeDefinition.prototype.initialize = function ()
+CallbackStuck.prototype.initialize = function ()
 {
 	if (this._isInitialized)
-		throw new Error('RuntimeDefinition already initialized');
+		throw new Error('CallbackStuck already initialized');
 	
 	this._isInitialized = true;
 	
@@ -49,10 +46,10 @@ RuntimeDefinition.prototype.initialize = function ()
 	global.namespace = this._getNamespaceFunction();
 };
 
-RuntimeDefinition.prototype.destroy = function ()
+CallbackStuck.prototype.destroy = function ()
 {
 	if (!this._isInitialized)
-		throw new Error('RuntimeDefinition was not initialized');
+		throw new Error('CallbackStuck was not initialized');
 	
 	this._isInitialized = false;
 	
@@ -62,7 +59,7 @@ RuntimeDefinition.prototype.destroy = function ()
 	this._lastNamespace = null;
 };
 
-RuntimeDefinition.prototype.pushStack = function (rootElement, creator)
+CallbackStuck.prototype.pushStack = function (rootElement, creator)
 {
 	var def = new DefinitionsCollection();
 	
@@ -78,7 +75,7 @@ RuntimeDefinition.prototype.pushStack = function (rootElement, creator)
 /**
  * @return {DefinitionsCollection}
  */
-RuntimeDefinition.prototype.popStack = function ()
+CallbackStuck.prototype.popStack = function ()
 {
 	var result;
 	
@@ -106,4 +103,4 @@ RuntimeDefinition.prototype.popStack = function ()
 };
 
 
-module.exports = RuntimeDefinition;
+module.exports = CallbackStuck;

@@ -93,6 +93,14 @@ GenericPathProxy.prototype.getParent = function ()
 };
 
 /**
+ * @return {boolean}
+ */
+GenericPathProxy.prototype.hasParent = function ()
+{
+	return this._parent !== null;
+};
+
+/**
  * @return {string}
  */
 GenericPathProxy.prototype.getFullName = function ()

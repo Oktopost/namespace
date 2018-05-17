@@ -132,5 +132,14 @@ RootNamespace.prototype.createMember = function (source, name, value)
 	return member;
 };
 
+/**
+ * @param {string} fullName
+ * @return {NamespaceMember|null}
+ */
+RootNamespace.prototype.getMember = function (fullName)
+{
+	return this._members[fullName] || null;
+};
 
-module.exports = Namespace;
+
+module.exports = RootNamespace;
