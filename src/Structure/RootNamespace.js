@@ -6,7 +6,6 @@ const NamespaceDefinition	= require('./NamespaceDefinition');
 const MemberAlreadyDefinedException	= require('../Exceptions/MemberAlreadyDefinedException');
 
 
-
 /**
  * @constructor
  */
@@ -36,21 +35,6 @@ RootNamespace.prototype._getName = function (fullName)
 };
 
 /**
- * @param {string} filePath
- * @return {File}
- * @private
- */
-RootNamespace.prototype._getFile = function (filePath)
-{
-	if (typeof this._files[filePath] === 'undefined')
-	{
-		this._files[filePath] = new File(filePath);
-	}
-	
-	return this._files[filePath];
-};
-
-/**
  * @param {string} fullName
  * @return {Namespace|null}
  * @private
@@ -65,6 +49,20 @@ RootNamespace.prototype._getParent = function (fullName)
 		return this.getOrCreateNamespace(fullName.substr(0, fullName.lastIndexOf('.')));
 };
 
+
+/**
+ * @param {string} filePath
+ * @return {File}
+ */
+RootNamespace.prototype.getFile = function (filePath)
+{
+	if (typeof this._files[filePath] === 'undefined')
+	{
+		this._files[filePath] = new File(filePath);
+	}
+	
+	return this._files[filePath];
+};
 
 /**
  * @param {string} fullName

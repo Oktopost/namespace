@@ -1,5 +1,7 @@
-const RootProxy			= require('./../Proxy/RootProxy');
-const DefinitionProxy	= require('./../Proxy/DefinitionProxy');
+const RootProxy					= require('./../Proxy/RootProxy');
+const DefinitionProxy			= require('./../Proxy/DefinitionProxy');
+const InvalidPathException		= require('./../Exceptions/InvalidPathException');
+const MemberNotDefinedException = require('./../Exceptions/MemberNotDefinedException');
 
 
 /**
@@ -18,9 +20,10 @@ function Manager(config)
 	
 	this._config = config;
 	
-	this._currDefinition	= null;
-	this._defProxy			= new DefinitionProxy(this._onDefine.bind(this));
-	this._scopeProxy		= new RootProxy(scopeProxyCallbacks);
+	this._file          = null;
+	this._currDefObject = null;
+	this._defProxy      = new DefinitionProxy(this._onDefine.bind(this));
+	this._scopeProxy    = new RootProxy(scopeProxyCallbacks);
 }
 
 
@@ -41,7 +44,7 @@ Manager.prototype._findMember = function (fullName)
 	
 	if (member === null)
 	{
-		// TODO: Throw exception, object was not defined inside the file
+		throw new MemberNotDefinedException(file, fullName);
 	}
 	
 	return member.value();
@@ -56,7 +59,7 @@ Manager.prototype._findMember = function (fullName)
  */
 Manager.prototype._onDefine = function (name, value)
 {
-	var member = this._currDefinition.createMember(name, value);
+	var member = this._currDefObject.createMember(name, value);
 	return member.value();
 };
 
@@ -79,7 +82,7 @@ Manager.prototype._onGetPath = function (data)
 	}
 	else
 	{
-		// TODO: Exception
+		throw new InvalidPathException(data.fullName);
 	}
 };
 
@@ -97,9 +100,14 @@ Manager.prototype._onGetElement = function (proxy)
 		member = this._findMember(fullName);
 	}
 	
-	this._currDefinition.addDependency(member);
+	this._currDefObject.addDependency(member);
 	proxy.setValue(member.value());
-	
+};
+
+Manager.prototype._createDefinition = function (name)
+{
+	this._config.debugStack.pushNamespace(name);
+	this._currDefObject = this._config.rootNamespace.createDefinition(name, this._file);
 };
 
 
@@ -108,7 +116,25 @@ Manager.prototype._onGetElement = function (proxy)
  */
 Manager.prototype.parse = function (file)
 {
+	this._file = this._config.rootNamespace.getFile(file);
 	
+	this._config.pushStack(
+		file, 
+		{
+			thisProxy:			this._defProxy,
+			rootProxy:			this._scopeProxy,
+			definitionCallback: this._onDefine.bind(this)
+		});
+	
+	try
+	{
+		require(this._file.fullPath());
+	}
+	catch (e)
+	{
+		this._config.popStack();
+		throw e;
+	}
 };
 
 
