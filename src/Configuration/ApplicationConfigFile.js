@@ -1,6 +1,3 @@
-'use strict';
-
-
 const path 	= require('path');
 const fs	= require('fs');
 
@@ -14,7 +11,6 @@ const FILE_NAME = '.namespace.json';
  */
 function ApplicationConfigFile(dir)
 {
-	this._dir = dir;
 	this._file = path.join(dir, FILE_NAME);
 }
 

@@ -115,6 +115,13 @@ GenericPathProxy.prototype.getName = function ()
 {
 	return this._name;
 };
+/**
+ * @return {*}
+ */
+GenericPathProxy.prototype.getValue = function ()
+{
+	return this._value;
+};
 
 GenericPathProxy.prototype.getObject = function ()
 {

@@ -24,5 +24,10 @@ DebugStack.prototype.popFile = function ()
 	this._file = this._files.pop() || null;
 };
 
+DebugStack.prototype.popNamespace = function ()
+{
+	this._currNamespace = null;
+};
+
 
 module.exports = DebugStack;

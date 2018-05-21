@@ -8,33 +8,40 @@ const MemberNotDefinedException = require('./../Exceptions/MemberNotDefinedExcep
  * @param {DefinitionConfig} config
  * 
  * @property {NamespaceDefinition} _currDefinition
+ * @property {PathProxy} _lastProxy
  * 
  * @constructor
  */
 function Manager(config)
 {
 	var scopeProxyCallbacks = {
-		onGet: this._onGetPath.bind(this),
-		onReference: this._onGetElement.bind(this)
+		onGet:				this._onGetPath.bind(this),
+		onReference:		this._onGetElement.bind(this),
+		definitionCallback:	this._createDefinition.bind(this)
 	};
 	
 	this._config = config;
 	
+	this._lastProxy		= null;
+	
 	this._file          = null;
 	this._currDefObject = null;
-	this._defProxy      = new DefinitionProxy(this._onDefine.bind(this));
-	this._scopeProxy    = new RootProxy(scopeProxyCallbacks);
+	this._thisProxy		= new DefinitionProxy(this._onDefine.bind(this));
+	this._rootProxy		= new RootProxy(scopeProxyCallbacks);
 }
 
 
 /**
  * @param {string} fullName
- * @return {NamespaceMember}
+ * @return {NamespaceMember|null}
  * @private
  */
 Manager.prototype._findMember = function (fullName)
 {
 	var member;
+	
+	if (!this._config.fileResolver.isValidFile(fullName))
+		return null;
 	
 	var file	= this._config.fileResolver.getFilePath(fullName);
 	var manager	= new Manager(this._config);
@@ -42,14 +49,62 @@ Manager.prototype._findMember = function (fullName)
 	manager.parse(file);
 	member = this._config.rootNamespace.getMember(fullName);
 	
-	if (member === null)
-	{
-		throw new MemberNotDefinedException(file, fullName);
-	}
-	
-	return member.value();
+	return member || null;
 };
 
+/**
+ * @param {PathProxy} proxy
+ * @return {boolean}
+ * @private
+ */
+Manager.prototype._findProxyValue = function (proxy)
+{
+	var fullName = proxy.getFullName();
+	var member = this._findMember(fullName);
+	
+	if (!member)
+		return false;
+	
+	proxy.setValue(member.value());
+	return true;
+};
+
+/**
+ * @param {PathProxy} proxy
+ * @return {boolean}
+ * @private
+ */
+Manager.prototype._findProxyValueRecursive = function (proxy)
+{
+	var isFound = false;
+	
+	while (proxy && !isFound)
+	{
+		if (this._findProxyValue(proxy))
+		{
+			isFound = true;
+			break;
+		}
+		else
+		{
+			proxy = proxy.getParent();
+		}
+	}
+	
+	if (!isFound)
+	{
+		throw new InvalidPathException(proxy.getFullName());
+	}
+};
+
+Manager.prototype._finalizeLastProxy = function ()
+{
+	if (this._lastProxy)
+		return;
+	
+	this._findProxyValueRecursive(this._lastProxy);
+	this._lastProxy = null;
+};
 
 /**
  * @param {string} name
@@ -59,6 +114,8 @@ Manager.prototype._findMember = function (fullName)
  */
 Manager.prototype._onDefine = function (name, value)
 {
+	this._finalizeLastProxy();
+	
 	var member = this._currDefObject.createMember(name, value);
 	return member.value();
 };
@@ -78,7 +135,7 @@ Manager.prototype._onGetPath = function (data)
 	}
 	else if (resolver.isValidFile(data.fullName))
 	{
-		return this._findMember(data.fullName);
+		return this._findProxyValueRecursive(data.proxy);
 	}
 	else
 	{
@@ -92,27 +149,36 @@ Manager.prototype._onGetPath = function (data)
  */
 Manager.prototype._onGetElement = function (proxy)
 {
-	var fullName	= proxy.getFullName();
-	var member		= this._config.rootNamespace.getMember(fullName);
+	if (this._lastProxy !== proxy)
+		this._finalizeLastProxy();
 	
-	if (member === null)
-	{
-		member = this._findMember(fullName);
-	}
-	
-	this._currDefObject.addDependency(member);
-	proxy.setValue(member.value());
+	this._findProxyValueRecursive(proxy);
 };
 
-Manager.prototype._createDefinition = function (name)
+/**
+ * @param {string} name
+ * @param {function} callback
+ * @param {function(string, function)} next
+ * @private
+ */
+Manager.prototype._createDefinition = function (name, callback, next)
 {
+	this._finalizeLastProxy();
+	
 	this._config.debugStack.pushNamespace(name);
 	this._currDefObject = this._config.rootNamespace.createDefinition(name, this._file);
+	
+	var result = next(name, callback);
+	
+	this._finalizeLastProxy();
+	this._config.debugStack.popNamespace();
+	
+	return result;
 };
 
 
 /**
- * @param {string} file
+ * @param {string|function} file
  */
 Manager.prototype.parse = function (file)
 {
@@ -121,14 +187,19 @@ Manager.prototype.parse = function (file)
 	this._config.pushStack(
 		file, 
 		{
-			thisProxy:			this._defProxy,
-			rootProxy:			this._scopeProxy,
+			thisProxy:			this._thisProxy,
+			rootProxy:			this._rootProxy,
 			definitionCallback: this._onDefine.bind(this)
 		});
 	
 	try
 	{
-		require(this._file.fullPath());
+		if (typeof file === 'string')
+			require(this._file.fullPath());
+		else
+			file.call(null, this._rootProxy);
+		
+		this._finalizeLastProxy();
 	}
 	catch (e)
 	{

@@ -20,9 +20,15 @@ CallbackStack.prototype._getNamespaceFunction = function ()
 		if (!callback)
 			throw new NamespaceException('Namespace definition callback was not passed!');
 		
-		self._currentItems.definitionCallback(name);
+		var func = function (name, callback)
+		{
+			callback.call(this._currentItems.thisProxy, this._currentItems.rootProxy);
+		};
 		
-		return callback.call(this._currentItems.thisProxy, this._currentItems.rootProxy);
+		return self._currentItems.definitionCallback(
+			name,
+			callback,
+			func.bind(this));
 	};
 };
 
