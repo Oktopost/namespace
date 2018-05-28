@@ -1,0 +1,17 @@
+{
+	"map":
+	{
+		"dir":
+		{
+			"Math": "src/"
+		},
+		"partial":
+		{
+			"Config": "src"
+		},
+		"file": 
+		{
+			"Full": "./Full"
+		}
+	}
+}

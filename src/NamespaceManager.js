@@ -108,7 +108,7 @@ NamespaceManager.prototype.load = function (item)
  */
 NamespaceManager.prototype.getRoot = function ()
 {
-	return this._defManager.root();
+	return this._defManager.root().getObject();
 };
 
 /**

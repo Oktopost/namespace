@@ -120,4 +120,20 @@ suite('NamespaceManager', () =>
 		
 		assert.deepEqual({ "Value": { "a": 3 } }, res);
 	});
+	
+	
+	test('full_sanity', () =>
+	{
+		var ns = NamespaceManager.setup(
+			getFolderPath('full'),
+			(root) => 
+			{
+				root.Full;
+			}
+		);
+		
+		var result = ns.getRoot().Full.exec();
+		
+		assert.equal(result, 25);
+	});
 });
