@@ -1,9 +1,3 @@
-'use strict';
-
-
-const fs = require( 'fs' );
-
-
 function Crawler(onDependency)
 {
 	this._onComplete	= null;
