@@ -1,3 +1,6 @@
+const RecursiveDependencyException = require('../Exceptions/RecursiveDependencyException');
+
+
 function DebugStack()
 {
 	this._lastObject	= null;
@@ -28,6 +31,12 @@ DebugStack.prototype._getLastObject = function ()
 
 DebugStack.prototype.setFile = function (file)
 {
+	for (var i = 0; i < this._stack.length - 1; i++)
+	{
+		if (this._stack[i].file === file)
+			throw new RecursiveDependencyException(this, file);
+	}
+	
 	this._getLastObject().file = file;
 };
 
