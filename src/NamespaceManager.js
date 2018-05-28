@@ -27,7 +27,10 @@ NamespaceManager.prototype._readConfig = function (file, config)
 	if (typeof config.map === 'undefined')
 		return;
 	
+	var path = require('path');
+	
 	var found;
+	var directory = path.dirname(file);
 	
 	config = config.map;
 	
@@ -44,8 +47,8 @@ NamespaceManager.prototype._readConfig = function (file, config)
 			
 			found = true;
 			
-			this._resolvers[i].parseConfig(
-				file,
+			resolver.parseConfig(
+				directory,
 				config[key]
 			);
 			

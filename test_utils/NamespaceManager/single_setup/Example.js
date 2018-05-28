@@ -1,4 +1,4 @@
-namespace('Example', function (root)
+namespace('', function ()
 {
 	this.Example = { "A": 2 };
 });

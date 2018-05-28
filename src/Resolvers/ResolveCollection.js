@@ -15,7 +15,7 @@ ResolveCollection.prototype.constructor = ResolveCollection;
 
 ResolveCollection.prototype._foreachResolver = function (callback)
 {
-	for (var i = 0; i < this._resolvers; i++)
+	for (var i = 0; i < this._resolvers.length; i++)
 	{
 		if (callback.call(this, this._resolvers[i]) === false)
 			break;

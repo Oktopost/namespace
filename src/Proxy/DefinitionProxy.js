@@ -16,14 +16,14 @@ DefinitionProxy.prototype._onSet = function (obj, name, value)
 };
 
 
-DefinitionProxy.prototype.getObject = function ()
+DefinitionProxy.prototype.getProxy = function ()
 {
 	if (!this._proxy)
 	{
 		this._proxy = new Proxy(
 			this._obj,
 			{
-				set: this._onSet
+				set: this._onSet.bind(this)
 			}
 		)
 	}

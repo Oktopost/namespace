@@ -54,7 +54,7 @@ SingleFileResolver.prototype.isValidPath = function (fullName)
 	
 	for (var key in this._files)
 	{
-		if (this._files[key].indexOf(search) === 0)
+		if (key.indexOf(search) === 0)
 			return true;
 	}
 	

@@ -91,6 +91,15 @@ RootNamespace.prototype.getNamespace = function (fullName)
 };
 
 /**
+ * @param {string} fullName
+ * @return {boolean}
+ */
+RootNamespace.prototype.hasNamespace = function (fullName)
+{
+	return typeof this._namespaces[fullName] !== 'undefined';
+};
+
+/**
  * @param {string} namespaceName
  * @param {File|string=null} file File object or full file path
  * @return {NamespaceDefinition}
@@ -124,7 +133,7 @@ RootNamespace.prototype.createMember = function (source, name, value)
 	
 	var member = new NamespaceMember(source, name, value);
 	
-	this._members[fullName] = members;
+	this._members[fullName] = member;
 	source.namespace().addMember(member);
 	
 	return member;
@@ -137,6 +146,24 @@ RootNamespace.prototype.createMember = function (source, name, value)
 RootNamespace.prototype.getMember = function (fullName)
 {
 	return this._members[fullName] || null;
+};
+
+/**
+ * @param {string} fullName
+ * @return {*|undefined}
+ */
+RootNamespace.prototype.getValue = function (fullName)
+{
+	return this.hasMember(fullName) ? this.getMember(fullName).value() : undefined;
+};
+
+/**
+ * @param {string} fullName
+ * @return {boolean}
+ */
+RootNamespace.prototype.hasMember = function (fullName)
+{
+	return (typeof this._members[fullName] !== 'undefined');
 };
 
 

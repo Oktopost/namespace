@@ -75,6 +75,12 @@ GenericPathProxy.prototype._onGet = function (target, name)
 };
 
 
+GenericPathProxy.prototype._getProxy = function ()
+{
+	throw new NamespaceException('Not implemented');
+};
+
+
 /**
  * @param {string} name
  * @return {string}
@@ -125,7 +131,10 @@ GenericPathProxy.prototype.getValue = function ()
 
 GenericPathProxy.prototype.getObject = function ()
 {
-	throw new NamespaceException('Not implemented');
+	if (this._value !== null)
+		return this._value;
+	
+	return this._getProxy();
 };
 
 

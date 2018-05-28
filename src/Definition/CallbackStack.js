@@ -22,13 +22,15 @@ CallbackStack.prototype._getNamespaceFunction = function ()
 		
 		var func = function (name, callback)
 		{
-			callback.call(this._currentItems.thisProxy, this._currentItems.rootProxy);
+			callback.call(
+				self._currentItems.thisProxy.getProxy(), 
+				self._currentItems.rootProxy.getObject());
 		};
 		
 		return self._currentItems.definitionCallback(
 			name,
 			callback,
-			func.bind(this));
+			func.bind(self));
 	};
 };
 
@@ -60,10 +62,13 @@ CallbackStack.prototype.destroy = function ()
 };
 
 /**
- * @param {{thisProxy, rootProxy, definitionCallback}} items
+ * @param {{thisProxy: DefinitionProxy, rootProxy: RootProxy, definitionCallback}} items
  */
 CallbackStack.prototype.pushStack = function (items)
 {
+	if (this._itemsStack.length === 0)
+		this.initialize();
+	
 	this._currentItems = items;
 	this._itemsStack.push(items);
 };
@@ -74,6 +79,7 @@ CallbackStack.prototype.popStack = function ()
 	{
 		this._itemsStack = [];
 		this._currentItems = null;
+		this.destroy();
 	}
 	else
 	{

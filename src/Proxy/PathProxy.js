@@ -23,9 +23,34 @@ PathProxy.prototype._invokeOnReference = function ()
 		this._callback.onReference(this);
 };
 
+
 PathProxy.prototype._getChildProxy = function (name)
 {
 	return new PathProxy(this._callback, this, name);
+};
+
+PathProxy.prototype._getProxy = function ()
+{
+	if (!this._proxy)
+	{
+		this._proxy = new Proxy(
+			this._children,
+			{
+				set:						this._onSet.bind(this),
+				get:						this._onGet.bind(this),
+				apply:						this._onApply.bind(this),
+				construct:					this._onConstruct.bind(this),
+				defineProperty:				this._onDefineProperty.bind(this),
+				deleteProperty:				this._onDeleteProperty.bind(this),
+				has:						this._onHas.bind(this),
+				isExtensible:				this._onIsExtensible.bind(this),
+				preventExtensions:			this._onPreventExtensions.bind(this),
+				setPrototypeOf:				this._onSetPrototypeOf.bind(this)
+			}
+		)
+	}
+	
+	return this._proxy;
 };
 
 
@@ -95,30 +120,6 @@ PathProxy.prototype.setValue = function (val)
 	}
 	
 	this._children = null;
-};
-
-PathProxy.prototype.getObject = function ()
-{
-	if (!this._proxy)
-	{
-		this._proxy = new Proxy(
-			this._children,
-			{
-				set:						this._onSet.bind(this),
-				get:						this._onGet.bind(this),
-				apply:						this._onApply.bind(this),
-				construct:					this._onConstruct.bind(this),
-				defineProperty:				this._onDefineProperty.bind(this),
-				deleteProperty:				this._onDeleteProperty.bind(this),
-				has:						this._onHas.bind(this),
-				isExtensible:				this._onIsExtensible.bind(this),
-				preventExtensions:			this._onPreventExtensions.bind(this),
-				setPrototypeOf:				this._onSetPrototypeOf.bind(this)
-			}
-		)
-	}
-	
-	return this._proxy;
 };
 
 

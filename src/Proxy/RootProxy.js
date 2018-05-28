@@ -36,8 +36,7 @@ RootProxy.prototype._getChildProxy = function (name)
 	return new PathProxy(this._callback, null, name);
 };
 
-
-RootProxy.prototype.getProxyObject = function ()
+RootProxy.prototype._getProxy = function ()
 {
 	return this._proxy;
 };

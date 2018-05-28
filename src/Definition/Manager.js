@@ -25,7 +25,7 @@ function Manager(config)
 	
 	this._lastProxy		= null;
 	
-	this._source          = null;
+	this._source		= null;
 	this._currDefObject = null;
 	this._thisProxy		= new DefinitionProxy(this._onDefine.bind(this));
 	this._rootProxy		= new RootProxy(scopeProxyCallbacks);
@@ -77,24 +77,24 @@ Manager.prototype._findProxyValue = function (proxy)
  */
 Manager.prototype._findProxyValueRecursive = function (proxy)
 {
+	var current = proxy;
 	var isFound = false;
 	
 	if (!proxy)
 		return true;
 	
-	while (proxy && !isFound)
+	while (current && !isFound)
 	{
-		if (this._findProxyValue(proxy))
+		if (this._findProxyValue(current))
 		{
 			isFound = true;
 			break;
 		}
 		else
 		{
-			proxy = proxy.getParent();
+			current = current.getParent();
 		}
 	}
-	
 	if (!isFound)
 	{
 		throw new InvalidPathException(proxy.getFullName());
@@ -103,7 +103,7 @@ Manager.prototype._findProxyValueRecursive = function (proxy)
 
 Manager.prototype._finalizeLastProxy = function ()
 {
-	if (this._lastProxy)
+	if (!this._lastProxy)
 		return;
 	
 	this._findProxyValueRecursive(this._lastProxy);
@@ -133,7 +133,15 @@ Manager.prototype._onGetPath = function (data)
 {
 	var resolver = this._config.fileResolver;
 	
-	if (resolver.isValidPath(data.fullName))
+	if (this._config.rootNamespace.hasNamespace(data.fullName))
+	{
+		return null;
+	}
+	else if (this._config.rootNamespace.hasMember(data.fullName))
+	{
+		return this._config.rootNamespace.getValue(data.fullName);
+	}
+	else if (resolver.isValidPath(data.fullName))
 	{
 		return null;
 	}
@@ -199,7 +207,7 @@ Manager.prototype.parse = function (source)
 	{
 		this._source = null;
 		name = '< function >';
-		operation = () => { source.call(null, this._rootProxy); }
+		operation = () => { source.call(null, this._rootProxy.getObject()); }
 	}
 	
 	this._config.pushStack(
@@ -207,7 +215,7 @@ Manager.prototype.parse = function (source)
 		{
 			thisProxy:			this._thisProxy,
 			rootProxy:			this._rootProxy,
-			definitionCallback: this._onDefine.bind(this)
+			definitionCallback: this._createDefinition.bind(this)
 		});
 	
 	try

@@ -4,7 +4,7 @@ const assert	= require('chai').assert;
 const NamespaceManager = require('../../src/NamespaceManager');
 
 
-suite.only('NamespaceManager', () => 
+suite('NamespaceManager', () => 
 {
 	test('return self', () => 
 	{
@@ -13,5 +13,11 @@ suite.only('NamespaceManager', () =>
 		assert.strictEqual(result, result.setup(__dirname));
 		assert.strictEqual(result, result.addResolvers([]));
 		assert.strictEqual(result, result.load(() => {}));
+	});
+	
+	test('setup returns new object', () => 
+	{
+		var result = NamespaceManager.setup(getFolderPath());
+		assert.instanceOf(result, NamespaceManager);
 	});
 });
