@@ -1,11 +1,11 @@
 const AbstractResolver = require('./AbstractResolver');
 
 
-function ResolveCollection()
+function ResolveCollection(resolvers)
 {
 	AbstractResolver.call(this);
 	
-	this._resolvers = [];
+	this._resolvers = resolvers || [];
 }
 
 

@@ -20,7 +20,7 @@ function _checkFile(dirName, p, callback, onError)
 		try 
 		{
 			var data = require(p);
-			callback(dirName, data);
+			callback(p, data);
 		}
 		catch (e)
 		{
@@ -43,8 +43,7 @@ function configSearch(root, callback, onError)
 	
 	// Check local.
 	main = path.join(root, FILE_NAME);
-	_checkFile(path.basename(root), main, callback, onError);
-	
+	_checkFile(root, main, callback, onError);
 	
 	// Check node modules.
 	if (!fs.existsSync(nodeDir))
@@ -61,7 +60,7 @@ function configSearch(root, callback, onError)
 		
 		if (stat.isDirectory())
 		{
-			_checkFile(items[i], path.join(fullPath, FILE_NAME), callback, onError);
+			_checkFile(fullPath, path.join(fullPath, FILE_NAME), callback, onError);
 		}
 	}
 }

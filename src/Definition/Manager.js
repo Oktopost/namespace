@@ -1,11 +1,12 @@
-const RootProxy					= require('./../Proxy/RootProxy');
-const DefinitionProxy			= require('./../Proxy/DefinitionProxy');
-const InvalidPathException		= require('./../Exceptions/InvalidPathException');
-const MemberNotDefinedException = require('./../Exceptions/MemberNotDefinedException');
+const RootProxy				= require('./../Proxy/RootProxy');
+const DefinitionProxy		= require('./../Proxy/DefinitionProxy');
+const InvalidPathException	= require('./../Exceptions/InvalidPathException');
+
+const DefinitionConfig = require('./DefinitionConfig');
 
 
 /**
- * @param {DefinitionConfig} config
+ * @param {DefinitionConfig=} config
  * 
  * @property {NamespaceDefinition} _currDefinition
  * @property {PathProxy} _lastProxy
@@ -20,7 +21,7 @@ function Manager(config)
 		definitionCallback:	this._createDefinition.bind(this)
 	};
 	
-	this._config = config;
+	this._config = config || new DefinitionConfig();
 	
 	this._lastProxy		= null;
 	
@@ -206,6 +207,22 @@ Manager.prototype.parse = function (file)
 		this._config.popStack();
 		throw e;
 	}
+};
+
+/**
+ * @returns {DefinitionConfig|*}
+ */
+Manager.prototype.config = function ()
+{
+	return this._config;
+};
+
+/**
+ * @returns {RootProxy}
+ */
+Manager.prototype.root = function ()
+{
+	return this._rootProxy;
 };
 
 

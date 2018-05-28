@@ -1,6 +1,7 @@
-const RootNamespace = require('./../Structure/RootNamespace');
-const DebugStack	= require('./../Definition/DebugStack');
-const CallbackStack = require('./../Definition/CallbackStack');
+const RootNamespace 	= require('./../Structure/RootNamespace');
+const DebugStack		= require('./../Definition/DebugStack');
+const CallbackStack		= require('./../Definition/CallbackStack');
+const ResolveCollection	= require('./../Resolvers/ResolveCollection');
 
 
 /**
