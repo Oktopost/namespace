@@ -62,6 +62,9 @@ PartialPathResolver.prototype.isValidPath = function (fullName)
 {
 	for (var partialName in this._files)
 	{
+		if (!this._files.hasOwnProperty(partialName))
+			continue;
+		
 		if (fullName.indexOf(partialName) === 0)
 			return true;
 	}
@@ -79,6 +82,9 @@ PartialPathResolver.prototype.getFilePath = function (fullName)
 	
 	for (var partialName in this._files) 
 	{
+		if (!this._files.hasOwnProperty(partialName))
+			continue;
+		
 		if (partialName.length > found.length && fullName.indexOf(partialName) === 0)
 		{
 			found = partialName;

@@ -45,7 +45,8 @@ PathProxy.prototype._getProxy = function ()
 				has:						this._onHas.bind(this),
 				isExtensible:				this._onIsExtensible.bind(this),
 				preventExtensions:			this._onPreventExtensions.bind(this),
-				setPrototypeOf:				this._onSetPrototypeOf.bind(this)
+				setPrototypeOf:				this._onSetPrototypeOf.bind(this),
+				getOwnPropertyDescriptor:	this._onGetOwnPropertyDescriptor.bind(this)
 			}
 		)
 	}
@@ -108,6 +109,12 @@ PathProxy.prototype._onSetPrototypeOf = function(target, prototype)
 	return Reflect.setPrototypeOf(this._value, prototype);
 };
 
+PathProxy.prototype._onGetOwnPropertyDescriptor = function(target, k)
+{
+	this._invokeOnReference();
+	return Reflect.getOwnPropertyDescriptor(this._value, k);
+};
+
 
 PathProxy.prototype.setValue = function (val)
 {
@@ -115,6 +122,9 @@ PathProxy.prototype.setValue = function (val)
 	
 	for (var key in this._children)
 	{
+		if (!this._children.hasOwnProperty(key))
+			continue;
+		
 		var childValue = typeof val === 'undefined' ? undefined : val[key];
 		this._children[key].setValue(childValue);
 	}

@@ -59,7 +59,7 @@ suite('NamespaceManager', () =>
 		assert.deepEqual({ "Extra": 2 }, res2);
 	});
 	
-	test.only('number of definitions in one file', () =>
+	test('number of definitions in one file', () =>
 	{
 		var res1, res2;
 		
@@ -72,7 +72,52 @@ suite('NamespaceManager', () =>
 			}
 		);
 		
-		assert.deepEqual({ "Main": 2 }, res1);
-		assert.deepEqual({ "Extra": 3 }, res2);
+		assert.deepEqual(res1, { "Main": 2 });
+		assert.deepEqual(res2, { "Extra": 3 });
+	});
+	
+	test('partial path', () =>
+	{
+		var res;
+		
+		NamespaceManager.setup(
+			getFolderPath('partial_path'),
+			(root) => 
+			{
+				res = root.NS.Example;
+			}
+		);
+		
+		assert.deepEqual(res, { "Partial": 2 });
+	});
+	
+	test('dir path', () =>
+	{
+		var res;
+		
+		NamespaceManager.setup(
+			getFolderPath('dir_path'),
+			(root) => 
+			{
+				res = root.NS.Example;
+			}
+		);
+		
+		assert.deepEqual(res, { "Dir": 3 });
+	});
+	
+	test('definition with dependencies', () =>
+	{
+		var res;
+		
+		NamespaceManager.setup(
+			getFolderPath('with_dependencies'),
+			(root) => 
+			{
+				res = root.NS.Example;
+			}
+		);
+		
+		assert.deepEqual({ "Value": { "a": 3 } }, res);
 	});
 });

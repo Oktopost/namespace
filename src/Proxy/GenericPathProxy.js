@@ -14,7 +14,7 @@ function GenericPathProxy(callbacks, parent, name)
 	this._name		= name;
 	this._parent	= parent;
 	
-	this._children	= {};
+	this._children	= function() {};
 	this._value		= null;
 }
 

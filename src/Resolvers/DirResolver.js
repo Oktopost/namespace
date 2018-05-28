@@ -62,6 +62,9 @@ DirResolver.prototype.isValidPath = function (fullName)
 {
 	for (var partialName in this._files)
 	{
+		if (!this._files.hasOwnProperty(partialName))
+			continue;
+		
 		if (fullName.indexOf(partialName) === 0)
 			return true;
 	}
@@ -79,6 +82,9 @@ DirResolver.prototype.getFilePath = function (fullName)
 	
 	for (var partialName in this._files) 
 	{
+		if (!this._files.hasOwnProperty(partialName))
+			continue;
+		
 		if (partialName.length > found.length && fullName.indexOf(partialName) === 0)
 		{
 			found = partialName;
@@ -87,7 +93,7 @@ DirResolver.prototype.getFilePath = function (fullName)
 	
 	if (found.length > 0)
 	{
-		file = fullName.substr(found.length);
+		file = fullName;
 		
 		if (file[0] === '.')
 			file = file.substr(1);

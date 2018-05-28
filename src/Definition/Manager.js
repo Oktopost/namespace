@@ -23,9 +23,8 @@ function Manager(config)
 	
 	this._config = config || new DefinitionConfig();
 	
-	this._lastProxy		= null;
-	
 	this._source		= null;
+	this._lastProxy		= null;
 	this._currDefObject = null;
 	this._thisProxy		= new DefinitionProxy(this._onDefine.bind(this));
 	this._rootProxy		= new RootProxy(scopeProxyCallbacks);
@@ -133,6 +132,11 @@ Manager.prototype._onGetPath = function (data)
 {
 	var resolver = this._config.fileResolver;
 	
+	if (data.proxy.getParent() !== this._lastProxy)
+		this._finalizeLastProxy();
+	
+	this._lastProxy = data.proxy;
+	
 	if (this._config.rootNamespace.hasNamespace(data.fullName))
 	{
 		return null;
@@ -141,13 +145,13 @@ Manager.prototype._onGetPath = function (data)
 	{
 		return this._config.rootNamespace.getValue(data.fullName);
 	}
-	else if (resolver.isValidPath(data.fullName))
-	{
-		return null;
-	}
 	else if (resolver.isValidFile(data.fullName))
 	{
 		return this._findProxyValueRecursive(data.proxy);
+	}
+	else if (resolver.isValidPath(data.fullName))
+	{
+		return null;
 	}
 	else
 	{
