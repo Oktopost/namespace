@@ -116,6 +116,11 @@ PathProxy.prototype._onGetOwnPropertyDescriptor = function(target, k)
 };
 
 
+PathProxy.prototype.hasValue = function ()
+{
+	return this._value !== null;
+};
+
 PathProxy.prototype.setValue = function (val)
 {
 	this._value = val;
@@ -125,7 +130,7 @@ PathProxy.prototype.setValue = function (val)
 		if (!this._children.hasOwnProperty(key))
 			continue;
 		
-		var childValue = typeof val === 'undefined' ? undefined : val[key];
+		var childValue = (typeof val === 'undefined' ? undefined : val[key]);
 		this._children[key].setValue(childValue);
 	}
 	

@@ -102,10 +102,12 @@ Manager.prototype._findProxyValueRecursive = function (proxy)
 
 Manager.prototype._finalizeLastProxy = function ()
 {
-	if (!this._lastProxy)
-		return;
+	if (this._lastProxy && !this._lastProxy.hasValue())
+	{
+		this._findProxyValueRecursive(this._lastProxy);
+		
+	}
 	
-	this._findProxyValueRecursive(this._lastProxy);
 	this._lastProxy = null;
 };
 
@@ -125,7 +127,6 @@ Manager.prototype._onDefine = function (name, value)
 
 /**
  * @param {{name: string, fullName: string, proxy: (PathProxy|null), parent: (PathProxy|null)}} data
- * @return {*}
  * @private
  */
 Manager.prototype._onGetPath = function (data)
@@ -137,21 +138,21 @@ Manager.prototype._onGetPath = function (data)
 	
 	this._lastProxy = data.proxy;
 	
-	if (this._config.rootNamespace.hasNamespace(data.fullName))
+	if (this._config.rootNamespace.hasMember(data.fullName))
 	{
-		return null;
-	}
-	else if (this._config.rootNamespace.hasMember(data.fullName))
-	{
-		return this._config.rootNamespace.getValue(data.fullName);
+		data.proxy.setValue(
+			this._config.rootNamespace.getValue(data.fullName)
+		);
 	}
 	else if (resolver.isValidFile(data.fullName))
 	{
-		return this._findProxyValueRecursive(data.proxy);
+		this._findProxyValueRecursive(data.proxy);
 	}
-	else if (resolver.isValidPath(data.fullName))
+	else if (
+		this._config.rootNamespace.hasNamespace(data.fullName) ||
+		resolver.isValidPath(data.fullName))
 	{
-		return null;
+		return;
 	}
 	else
 	{
