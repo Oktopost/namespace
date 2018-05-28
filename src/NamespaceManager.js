@@ -111,7 +111,6 @@ NamespaceManager.prototype.getRoot = function ()
 	return this._defManager.root();
 };
 
-
 /**
  * @param {string} rootDir
  * @param {function=} item
