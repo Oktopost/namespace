@@ -86,6 +86,8 @@ NamespaceManager.prototype.setup = function (rootDir)
 		this._readConfig.bind(this),
 		this._onReadConfigError.bind(this)
 	);
+	
+	return this;
 };
 
 /**

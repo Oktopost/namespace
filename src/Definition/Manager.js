@@ -25,7 +25,7 @@ function Manager(config)
 	
 	this._lastProxy		= null;
 	
-	this._file          = null;
+	this._source          = null;
 	this._currDefObject = null;
 	this._thisProxy		= new DefinitionProxy(this._onDefine.bind(this));
 	this._rootProxy		= new RootProxy(scopeProxyCallbacks);
@@ -78,6 +78,9 @@ Manager.prototype._findProxyValue = function (proxy)
 Manager.prototype._findProxyValueRecursive = function (proxy)
 {
 	var isFound = false;
+	
+	if (!proxy)
+		return true;
 	
 	while (proxy && !isFound)
 	{
@@ -167,7 +170,7 @@ Manager.prototype._createDefinition = function (name, callback, next)
 	this._finalizeLastProxy();
 	
 	this._config.debugStack.pushNamespace(name);
-	this._currDefObject = this._config.rootNamespace.createDefinition(name, this._file);
+	this._currDefObject = this._config.rootNamespace.createDefinition(name, this._source);
 	
 	var result = next(name, callback);
 	
@@ -179,14 +182,28 @@ Manager.prototype._createDefinition = function (name, callback, next)
 
 
 /**
- * @param {string|function} file
+ * @param {string|function} source
  */
-Manager.prototype.parse = function (file)
+Manager.prototype.parse = function (source)
 {
-	this._file = this._config.rootNamespace.getFile(file);
+	var name;
+	var operation;
+	
+	if (typeof source === 'string')
+	{
+		this._source = this._config.rootNamespace.getFile(source);
+		name = source;
+		operation = () => { require(this._source.fullPath()); }
+	}
+	else 
+	{
+		this._source = null;
+		name = '< function >';
+		operation = () => { source.call(null, this._rootProxy); }
+	}
 	
 	this._config.pushStack(
-		file, 
+		name, 
 		{
 			thisProxy:			this._thisProxy,
 			rootProxy:			this._rootProxy,
@@ -195,11 +212,7 @@ Manager.prototype.parse = function (file)
 	
 	try
 	{
-		if (typeof file === 'string')
-			require(this._file.fullPath());
-		else
-			file.call(null, this._rootProxy);
-		
+		operation();
 		this._finalizeLastProxy();
 	}
 	catch (e)
