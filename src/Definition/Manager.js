@@ -40,16 +40,26 @@ Manager.prototype._findMember = function (fullName)
 {
 	var member;
 	
-	if (!this._config.fileResolver.isValidFile(fullName))
-		return null;
-	
-	var file	= this._config.fileResolver.getFilePath(fullName);
-	var manager	= new Manager(this._config);
-	
-	manager.parse(file);
-	member = this._config.rootNamespace.getMember(fullName);
-	
-	return member || null;
+	try
+	{
+		this._config.debugStack.push();
+		this._config.debugStack.setTarget(fullName);
+		
+		if (!this._config.fileResolver.isValidFile(fullName))
+			return null;
+		
+		var file	= this._config.fileResolver.getFilePath(fullName);
+		var manager	= new Manager(this._config);
+		
+		manager.parse(file);
+		member = this._config.rootNamespace.getMember(fullName);
+		
+		return member || null;
+	}
+	finally 
+	{
+		this._config.debugStack.pop();
+	}
 };
 
 /**
@@ -182,13 +192,13 @@ Manager.prototype._createDefinition = function (name, callback, next)
 {
 	this._finalizeLastProxy();
 	
-	this._config.debugStack.pushNamespace(name);
+	this._config.debugStack.setNamespace(name);
 	this._currDefObject = this._config.rootNamespace.createDefinition(name, this._source);
 	
 	var result = next(name, callback);
 	
 	this._finalizeLastProxy();
-	this._config.debugStack.popNamespace();
+	this._config.debugStack.setNamespace(null);
 	
 	return result;
 };
@@ -199,24 +209,23 @@ Manager.prototype._createDefinition = function (name, callback, next)
  */
 Manager.prototype.parse = function (source)
 {
-	var name;
 	var operation;
 	
 	if (typeof source === 'string')
 	{
 		this._source = this._config.rootNamespace.getFile(source);
-		name = source;
+		this._config.debugStack.setFile(source);
 		operation = () => { require(this._source.fullPath()); }
 	}
 	else 
 	{
 		this._source = null;
-		name = '< function >';
+		this._config.debugStack.setFile('< callback >');
 		operation = () => { source.call(null, this._rootProxy.getObject()); }
 	}
 	
-	this._config.pushStack(
-		name, 
+	
+	this._config.callbackStack.pushStack(
 		{
 			thisProxy:			this._thisProxy,
 			rootProxy:			this._rootProxy,
@@ -230,7 +239,7 @@ Manager.prototype.parse = function (source)
 	}
 	catch (e)
 	{
-		this._config.popStack();
+		this._config.callbackStack.popStack();
 		throw e;
 	}
 };

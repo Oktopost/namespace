@@ -19,21 +19,4 @@ function DefinitionConfig()
 }
 
 
-DefinitionConfig.prototype.popStack = function ()
-{
-	this.debugStack.popFile();
-	this.callbackStack.popStack();
-};
-
-/**
- * @param {string} file
- * @param {{thisProxy, rootProxy, definitionCallback}} obj
- */
-DefinitionConfig.prototype.pushStack = function (file, obj)
-{
-	this.callbackStack.pushStack(obj);
-	this.debugStack.pushFile(file);
-};
-
-
 module.exports = DefinitionConfig;
