@@ -13,6 +13,9 @@ function NamespaceMember(def, name, value)
 }
 
 
+/**
+ * @return {NamespaceDefinition}
+ */
 NamespaceMember.prototype.definition = function ()
 {
 	return this._definition;

@@ -13,6 +13,7 @@ function DefinitionProxy(onSet)
 DefinitionProxy.prototype._onSet = function (obj, name, value)
 {
 	this._obj[name] = this._onSetCallback(name, value);
+	return true;
 };
 
 

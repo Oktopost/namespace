@@ -74,7 +74,7 @@ Manager.prototype._findMember = function (fullName)
 
 /**
  * @param {PathProxy} proxy
- * @return {boolean}
+ * @return {NamespaceMember|null}
  * @private
  */
 Manager.prototype._findProxyValue = function (proxy)
@@ -83,10 +83,11 @@ Manager.prototype._findProxyValue = function (proxy)
 	var member = this._findMember(fullName);
 	
 	if (!member)
-		return false;
+		return null;
 	
 	proxy.setValue(member.value());
-	return true;
+	
+	return member;
 };
 
 /**
@@ -97,26 +98,27 @@ Manager.prototype._findProxyValue = function (proxy)
 Manager.prototype._findProxyValueRecursive = function (proxy)
 {
 	var current = proxy;
-	var isFound = false;
+	var member = null;
 	
 	if (!proxy)
 		return true;
 	
-	while (current && !isFound)
+	while (current && !member)
 	{
-		if (this._findProxyValue(current))
-		{
-			isFound = true;
-			break;
-		}
-		else
+		member = this._findProxyValue(current);
+		
+		if (member === null)
 		{
 			current = current.getParent();
 		}
 	}
-	if (!isFound)
-	{
+	
+	if (!member)
 		throw new InvalidPathException(this._config.debugStack, proxy.getFullName());
+	
+	if (this._currDefObject)
+	{
+		this._currDefObject.addDependency(member);
 	}
 };
 
@@ -158,11 +160,22 @@ Manager.prototype._onGetPath = function (data)
 	
 	this._lastProxy = data.proxy;
 	
+	console.log(data.fullName, data.parent === null, typeof global[data.fullName]);
+	
 	if (this._config.rootNamespace.hasMember(data.fullName))
 	{
-		data.proxy.setValue(
-			this._config.rootNamespace.getValue(data.fullName)
-		);
+		var member = this._config.rootNamespace.getMember(data.fullName);
+		
+		data.proxy.setValue(member.value());
+		
+		if (this._currDefObject)
+		{
+			this._currDefObject.addDependency(member);
+		}
+	}
+	else if (data.parent === null && typeof global[data.fullName] !== 'undefined')
+	{
+		data.proxy.setValue(global[data.fullName]);
 	}
 	else if (resolver.isValidFile(data.fullName))
 	{
@@ -176,7 +189,7 @@ Manager.prototype._onGetPath = function (data)
 	}
 	else
 	{
-		throw new InvalidPathException(data.fullName);
+		throw new InvalidPathException(this._config.debugStack, data.fullName);
 	}
 };
 

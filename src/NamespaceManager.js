@@ -2,6 +2,8 @@ const Manager	= require('./Definition/Manager');
 
 const configSearch	= require('./Configuration/configSearch');
 
+const Dependencies			= require('./Dependencies');
+
 const DirResolver			= require('./Resolvers/DirResolver');
 const ResolveCollection		= require('./Resolvers/ResolveCollection');
 const SingleFileResolver	= require('./Resolvers/SingleFileResolver');
@@ -127,6 +129,18 @@ NamespaceManager.setup = function (rootDir, item, resolvers)
 		ns.load(item);
 	
 	return ns;
+};
+
+/**
+ * @param {string=} to
+ * @param {boolean=true} includeTargetFile
+ */
+NamespaceManager.prototype.dependencies = function (to, includeTargetFile)
+{
+	includeTargetFile = (includeTargetFile !== false);
+	
+	var dep = new Dependencies(this._defManager.config().rootNamespace);
+	return (to ? dep.files(to, includeTargetFile) : dep);
 };
 
 

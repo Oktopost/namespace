@@ -28,7 +28,9 @@ RootProxy.prototype.constructor = RootProxy;
 
 RootProxy.prototype._onSet = function (obj, name, value)
 {
+	console.log('set ' + name);
 	global[name] = value;
+	return true;
 };
 
 RootProxy.prototype._getChildProxy = function (name)
