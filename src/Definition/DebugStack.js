@@ -31,13 +31,13 @@ DebugStack.prototype._getLastObject = function ()
 
 DebugStack.prototype.setFile = function (file)
 {
-	for (var i = 0; i < this._stack.length - 1; i++)
+	this._getLastObject().file = file;
+	
+	for (var i = 0; i < this._stack.length - 2; i++)
 	{
 		if (this._stack[i].file === file)
 			throw new RecursiveDependencyException(this, file);
 	}
-	
-	this._getLastObject().file = file;
 };
 
 DebugStack.prototype.setNamespace = function (namespace)
@@ -50,24 +50,63 @@ DebugStack.prototype.setTarget = function (target)
 	this._getLastObject().target = target;
 };
 
-DebugStack.prototype.foreach = function (callback)
+DebugStack.prototype.foreach = function (callback, isReversed)
 {
-	for (var i = 0; i < this._stack.length; i++)
+	var index;
+	var from = (isReversed ? this._stack.length - 1: 0);
+	var step = (isReversed ? -1 : +1);
+	var cond = (isReversed ? () => { return index >= 0; } : () => { return index < this._stack.length; });
+	
+	for (index = from; cond(); index += step)
 	{
-		callback(this._stack[i]);
+		callback(this._stack[index]);
 	}
 };
 
 DebugStack.prototype.push = function ()
 {
-	this._stack.push(this._lastObject);
 	this._createObject();
+	this._stack.push(this._lastObject);
 };
 
 DebugStack.prototype.pop = function ()
 {
 	this._stack.pop();
 	this._lastObject = (this._stack.length > 0 ? this._stack[this._stack.length - 1] : null);
+};
+
+DebugStack.prototype.toString = function ()
+{
+	var str = '';
+	var parts;
+	var index = this._stack.length;
+	
+	this.foreach(function (d)
+		{
+			parts = [];
+			
+			if (str.length > 0)
+				str += '\n';
+			
+			str += `    ${index--}) `;
+			
+			if (d.file)
+				parts.push('Source        : ' + d.file);
+			
+			if (d.namespace)
+				parts.push('Namespace     : ' + d.namespace);
+			
+			if (d.target)
+				parts.push('Searching for : ' + d.target);
+			
+			if (!parts.length === 0)
+				str += '< unknown >';
+			else
+				str += parts.join('\n       ');
+		},
+		true);
+	
+	return str;
 };
 
 

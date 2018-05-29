@@ -2,19 +2,20 @@ const NamespaceException = require('./NamespaceException');
 
 
 /**
- * @param {string} file
+ * @param {DebugStack} stack
  * @param {string} fullName
  * @constructor
  */
-function MemberNotDefinedException(file, fullName)
+function MemberNotDefinedException(stack, fullName)
 {
-	var message = 'The member [' + fullName + '] was not found after requiring the file [' + file + ']';
+	var message = 'The member [' + fullName + '] was not found';
 	
 	NamespaceException.call(this, message);
 	
-	this.stack = (new Error()).stack;
-	this.file = file;
-	this.namespace = file;
+	this.stack = '\n> Error: ' + this.message + '\n' +
+		'> Namespace stack: \n' + 
+		stack.toString() + 
+		'\n> Original: ' + this.stack;
 }
 
 

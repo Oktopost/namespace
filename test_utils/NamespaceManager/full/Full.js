@@ -7,8 +7,6 @@ namespace('', function (root)
 	this.Full = {
 		exec: function ()
 		{
-			console.log(Operation);
-			
 			var num = Consts.main;
 			var op = new Operation(num);
 			return op.exec();

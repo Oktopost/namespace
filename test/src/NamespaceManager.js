@@ -17,7 +17,7 @@ suite('NamespaceManager', () =>
 	
 	test('setup returns new object', () => 
 	{
-		var result = NamespaceManager.setup(getFolderPath());
+		var result = NamespaceManager.setup(__dirname);
 		assert.instanceOf(result, NamespaceManager);
 	});
 });

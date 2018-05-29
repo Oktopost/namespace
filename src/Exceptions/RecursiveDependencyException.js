@@ -9,7 +9,11 @@ const NamespaceException = require('./NamespaceException');
 function RecursiveDependencyException(stack, name)
 {
 	NamespaceException.call(this, `Recursive dependency detected in file ${name}`);
-	this.stack = stack;
+	
+	this.stack = '\n> Error: ' + this.message + '\n' +
+		'> Namespace stack: \n' + 
+		stack.toString() + 
+		'\n> Original: ' + this.stack;
 }
 
 
@@ -17,5 +21,4 @@ RecursiveDependencyException.prototype = Object.create(NamespaceException.protot
 RecursiveDependencyException.prototype.constructor = RecursiveDependencyException;
 
 
-module.exports = MemberNotDefinedException;
-
+module.exports = RecursiveDependencyException;

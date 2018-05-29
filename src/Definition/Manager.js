@@ -1,5 +1,8 @@
 const RootProxy				= require('./../Proxy/RootProxy');
 const DefinitionProxy		= require('./../Proxy/DefinitionProxy');
+
+const NamespaceException	= require('./../Exceptions/NamespaceException');
+const JavascriptException	= require('./../Exceptions/JavascriptException');
 const InvalidPathException	= require('./../Exceptions/InvalidPathException');
 
 const DefinitionConfig = require('./DefinitionConfig');
@@ -56,6 +59,13 @@ Manager.prototype._findMember = function (fullName)
 		
 		return member || null;
 	}
+	catch (e)
+	{
+		if (e instanceof NamespaceException)
+			throw e;
+		
+		throw new JavascriptException(this._config.debugStack, e);
+	}
 	finally 
 	{
 		this._config.debugStack.pop();
@@ -106,7 +116,7 @@ Manager.prototype._findProxyValueRecursive = function (proxy)
 	}
 	if (!isFound)
 	{
-		throw new InvalidPathException(proxy.getFullName());
+		throw new InvalidPathException(this._config.debugStack, proxy.getFullName());
 	}
 };
 
@@ -239,8 +249,10 @@ Manager.prototype.parse = function (source)
 	}
 	catch (e)
 	{
-		this._config.callbackStack.popStack();
-		throw e;
+		if (e instanceof NamespaceException)
+			throw e;
+		
+		throw new JavascriptException(this._config.debugStack, e);
 	}
 };
 
