@@ -28,5 +28,10 @@
     "istanbul": "^0.4.5",
     "coveralls": "2.10.0",
     "mocha": "^3.2.0"
+  },
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.3",
+    "gulp-wrap": "^0.14.0"
   }
 }
