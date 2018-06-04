@@ -98,7 +98,9 @@ PartialPathResolver.prototype.getFilePath = function (fullName)
 		if (file[0] === '.')
 			file = file.substr(1);
 		
-		file = file.replace('.', path.sep);
+		while (file.indexOf('.') !== -1)
+			file = file.replace('.', path.sep);
+		
 		file = path.resolve(this._files[found], file);
 		file += '.js';
 	}
