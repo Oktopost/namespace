@@ -160,8 +160,6 @@ Manager.prototype._onGetPath = function (data)
 	
 	this._lastProxy = data.proxy;
 	
-	console.log(data.fullName, data.parent === null, typeof global[data.fullName]);
-	
 	if (this._config.rootNamespace.hasMember(data.fullName))
 	{
 		var member = this._config.rootNamespace.getMember(data.fullName);
