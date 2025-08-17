@@ -9,6 +9,33 @@ const FILE_NAME			= 'namespace.json';
 const NODE_MODULE_DIR	= 'node_modules';
 
 
+function _processScopedPackages(scopePath, scopeName, callback, onError)
+{
+	try
+	{
+		const packages = fs.readdirSync(scopePath);
+		
+		for (const packageName of packages)
+		{
+			const packagePath = path.join(scopePath, packageName);
+			
+			if (fs.statSync(packagePath).isDirectory())
+			{
+				_checkFile(
+					`${scopeName}/${packageName}`,
+					path.join(packagePath, FILE_NAME),
+					callback,
+					onError
+				);
+			}
+		}
+	}
+	catch (error)
+	{
+		onError(scopePath, error);
+	}
+}
+
 /**
  * @param {string} dirName
  * @param {string} p
@@ -20,7 +47,7 @@ function _checkFile(dirName, p, callback, onError)
 {
 	if (fs.existsSync(p))
 	{
-		try 
+		try
 		{
 			var data = require(p);
 			callback(dirName, data);
@@ -66,6 +93,11 @@ function configSearch(root, callback, onError)
 		if (stat.isDirectory())
 		{
 			_checkFile(items[i], path.join(fullPath, FILE_NAME), callback, onError);
+			
+			if (items[i] === '@oktopost')
+			{
+				_processScopedPackages(fullPath, items[i], callback, onError);
+			}
 		}
 	}
 }
