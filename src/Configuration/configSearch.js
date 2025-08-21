@@ -90,7 +90,7 @@ function configSearch(root, callback, onError)
 		{
 			_checkFile(fullPath, path.join(fullPath, FILE_NAME), callback, onError);
 			
-			if (items[i] === '@oktopost')
+			if (items[i].startsWith('@'))
 			{
 				_processScopedPackages(fullPath, items[i], callback, onError);
 			}
